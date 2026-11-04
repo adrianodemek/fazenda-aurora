@@ -1,5 +1,5 @@
 import {MAP_SIZE,TILE_W,TILE_H,PLOTS,TREES,CROPS} from '../config/gameConfig.js';
-import {createTerrainLayer} from './art/terrain.js?v=025';
+import {createTerrainLayer} from './art/terrain.js?v=026';
 import {initialFarmView} from './camera.js?v=025';
 import {loadFarmSprites,drawFarmSprite} from './art/sprites.js?v=026';
 import {drawCropIllustrated} from './art/crops.js?v=026';
