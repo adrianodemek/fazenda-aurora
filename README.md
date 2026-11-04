@@ -2,6 +2,14 @@
 
 Jogo de fazenda 2D isométrico inspirado na jogabilidade social clássica, com visual modernizado. **Mobile-first em landscape**, também compatível com PC.
 
+## V0.2.6 — primeira arte ilustrada
+- Sprites SVG autorais e separados para casa, celeiro e árvores em `public/assets/sprites/`.
+- Cultivos redesenhados em módulo `src/world/art/crops.js`, com folhas e frutos por fase.
+- Gramado suavizado para reduzir aparência de grade quadriculada.
+- A lógica de plantio, os valores de moedas e os 30 canteiros não foram alterados.
+- Mantemos a câmera atual nesta etapa; vamos ajustar zoom depois que a direção artística for aprovada.
+- Se um sprite falhar, o jogo ainda desenha o elemento provisório em Canvas.
+
 ## V0.2.5 — enquadramento clássico no mobile
 - Zoom inicial maior: fazenda ocupa a área útil do celular horizontal
 - Casa, celeiro e plantações aumentados proporcionalmente
@@ -42,6 +50,8 @@ Abra http://localhost:8000 . Para publicar, configure GitHub Pages com a branch 
 - `src/world/renderer.js`: câmera, composição do cenário e objetos dinâmicos
 - `src/world/art/terrain.js`: terreno isométrico estático, independente das regras
 - `src/world/art/pond.js`: lago ilustrado independente
+- `src/world/art/sprites.js`: carregador dos sprites autorais em SVG
+- `src/world/art/crops.js`: ilustrações dos cultivos com seus estágios
 - `src/world/camera.js`: escala e foco inicial por tamanho da tela
 - `src/input/pointer.js`: controle por toque e mouse
 - `src/main.js`: integração da interface com os módulos
