@@ -5,7 +5,7 @@ import {drawPond} from './pond.js?v=025';
 
 const H_W = TILE_W / 2;
 const H_H = TILE_H / 2;
-const GRASS = ['#a9d47f', '#a5d078', '#aed782', '#a2cc75', '#b2d986'];
+const GRASS = ['#a6d477', '#a6d579', '#a9d77d', '#a5d478', '#abd880'];
 const SOIL = ['#bc8050', '#bb7c4d', '#b7824e'];
 
 function path(ctx, coords) {
@@ -49,13 +49,13 @@ function randomish(r,c,salt) {
 }
 function meadow(ctx,x,y,r,c) {
   const color=GRASS[(r*3+c*7)%GRASS.length];
-  poly(ctx,diamond(x,y),color,'#8cbf70');
+  poly(ctx,diamond(x,y),color);
 
   // Pequenos tufos e pontos de luz preservam a leitura do grid isométrico.
   ctx.save();
   path(ctx,diamond(x,y,48,23));
   ctx.clip();
-  for(let i=0;i<8;i++){
+  for(let i=0;i<10;i++){
     const px=x+(randomish(r,c,i+1)-0.5)*74;
     const py=y+(randomish(r,c,i+21)-0.5)*28;
     const len=2+randomish(r,c,i+31)*4;
