@@ -1,6 +1,6 @@
 import {MAP_SIZE,TILE_W,TILE_H,PLOTS,TREES,CROPS} from '../config/gameConfig.js';
-import {createTerrainLayer} from './art/terrain.js';
-import {initialFarmView} from './camera.js';
+import {createTerrainLayer} from './art/terrain.js?v=025';
+import {initialFarmView} from './camera.js?v=025';
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const key=(r,c)=>r+':'+c;
 function polygon(ctx,p,fill,stroke){ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0],p[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
