@@ -57,3 +57,28 @@
  .topbar .stats{min-width:0}
  .topbar .stats span{white-space:nowrap;padding:5px 6px}
 }
+
+/* V0.2.3 — barra superior validada em cinco resoluções no Chromium.
+   O canto direito fica reservado à ação de tela cheia. */
+.topbar{padding-right:calc(147px + env(safe-area-inset-right,0px))!important}
+.logo{white-space:nowrap;min-width:0}
+.logo .version{display:inline!important}
+.stats{min-width:0}
+.stats span{white-space:nowrap}
+.fullscreen-btn{width:129px!important;min-width:129px!important;height:42px!important;
+  top:calc(8px + env(safe-area-inset-top,0px))!important;
+  right:calc(10px + env(safe-area-inset-right,0px))!important;
+  background:#236b37!important;color:#fff!important;
+  border:2px solid #fff!important;font-size:12px!important;z-index:1000!important}
+.fullscreen-btn .fs-label{display:inline!important}
+.fullscreen-btn .fs-glyph{font-size:22px}
+@media(orientation:landscape) and (max-height:540px){
+ .topbar{padding-right:calc(147px + env(safe-area-inset-right,0px))!important}
+ .fullscreen-btn{height:38px!important}
+ .logo small{display:inline!important;font-size:9px}
+}
+@media(orientation:landscape) and (max-width:680px){
+ .topbar .logo strong{display:none}
+ .stats{gap:4px}
+ .stats span{font-size:10px;padding:5px}
+}
