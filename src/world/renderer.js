@@ -1,4 +1,5 @@
 import {MAP_SIZE,TILE_W,TILE_H,PLOTS,TREES,CROPS} from '../config/gameConfig.js';
+import {createTerrainLayer} from './art/terrain.js';
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const key=(r,c)=>r+':'+c;
 function polygon(ctx,p,fill,stroke){ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0],p[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
@@ -47,6 +48,7 @@ export class Renderer{
  constructor(canvas,state){
   this.canvas=canvas;this.ctx=canvas.getContext('2d');this.state=state;
   this.scale=.65;this.x=0;this.y=0;this.hover=null;this.width=0;this.height=0;
+  this.terrain=createTerrainLayer();
   this.resize();
  }
  resize(){
@@ -80,14 +82,8 @@ export class Renderer{
   const bg=ctx.createLinearGradient(0,0,w,h);bg.addColorStop(0,'#cce9ab');bg.addColorStop(1,'#8abf79');
   ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
   ctx.save();ctx.translate(this.x,this.y);ctx.scale(this.scale,this.scale);
-  const tl=this.tile(0,0),tr=this.tile(0,MAP_SIZE-1),br=this.tile(MAP_SIZE-1,MAP_SIZE-1),bl=this.tile(MAP_SIZE-1,0);
-  polygon(ctx,[[tl.x,tl.y-TILE_H/2],[tr.x+TILE_W/2,tr.y],[br.x,br.y+TILE_H/2+12],[bl.x-TILE_W/2,bl.y+10]],'#77a961');
-  for(let depth=0;depth<MAP_SIZE*2-1;depth++)
-   for(let r=Math.max(0,depth-MAP_SIZE+1);r<=Math.min(depth,MAP_SIZE-1);r++){
-    const c=depth-r,q=this.tile(r,c),soil=PLOTS.has(key(r,c));
-    diamond(ctx,q.x,q.y,soil?'#bb8652':(r+c)%3?'#a4d27b':'#9ccd72',soil?'#9a704c':'#8cbd70');
-    if(soil){diamond(ctx,q.x,q.y-2,'#ae7748','#996b44');for(let i=-1;i<=1;i++)line(ctx,q.x-22+i*13,q.y+6,q.x+12+i*13,q.y-12,'#815b3d77',1.5);}
-   }
+  // Cache do terreno estático: no frame desenhamos apenas uma imagem.
+  ctx.drawImage(this.terrain.canvas,this.terrain.offsetX,this.terrain.offsetY);
   const actors=TREES.map(([r,c],i)=>({r,c,type:'tree',i}));
   actors.push({r:3,c:9,type:'house'},{r:8,c:11,type:'barn'});
   for(const [id,p] of Object.entries(this.state.plants)){if(PLOTS.has(id)){const [r,c]=id.split(':').map(Number);actors.push({r,c,type:'crop',p});}}
