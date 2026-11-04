@@ -2,6 +2,14 @@
 
 Jogo de fazenda 2D isométrico inspirado na jogabilidade social clássica, com visual modernizado. **Mobile-first em landscape**, também compatível com PC.
 
+## V0.2.5 — enquadramento clássico no mobile
+- Zoom inicial maior: fazenda ocupa a área útil do celular horizontal
+- Casa, celeiro e plantações aumentados proporcionalmente
+- Lago ilustrado em módulo próprio e desenhado na camada estática do terreno
+- O mapa pode sair da área visível: arraste e zoom continuam disponíveis
+- Salvamento e canteiros preservados, sem alterar a economia ou o progresso
+- Regras de escala separadas em `src/world/camera.js`
+
 ## V0.2 (primeira etapa: terreno e canteiros)
 - Grama com variação de tons, pequenos tufos, flores e caminhos
 - Canteiros com profundidade, sulcos e relevo em desenho 2D isométrico
@@ -33,6 +41,8 @@ Abra http://localhost:8000 . Para publicar, configure GitHub Pages com a branch 
 - `src/systems/farm.js`: plantio, colheita, progressão e salvamento
 - `src/world/renderer.js`: câmera, composição do cenário e objetos dinâmicos
 - `src/world/art/terrain.js`: terreno isométrico estático, independente das regras
+- `src/world/art/pond.js`: lago ilustrado independente
+- `src/world/camera.js`: escala e foco inicial por tamanho da tela
 - `src/input/pointer.js`: controle por toque e mouse
 - `src/main.js`: integração da interface com os módulos
 - `tests/`: testes automatizados (executar `npm test`)
