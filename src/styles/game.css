@@ -1,84 +1,90 @@
 :root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#254b32}
-*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#92c179}button{font:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible{outline:3px solid #f2c66f}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#92c179}
+button{font:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid #f2c66f;outline-offset:2px}
 #game{position:relative;width:100%;height:100%;height:100dvh;overflow:hidden;isolation:isolate}
-#map{display:block;width:100%;height:100%;touch-action:none;cursor:grab}#map:active{cursor:grabbing}
-.topbar{position:absolute;top:0;left:0;right:0;z-index:2;padding:calc(8px + env(safe-area-inset-top,0px)) calc(118px + env(safe-area-inset-right,0px)) 0 calc(10px + env(safe-area-inset-left,0px));display:flex;align-items:flex-start;justify-content:space-between;gap:6px;pointer-events:none}
-.logo,.stats span{border:1px solid #ffffffb0;background:#fff9e9ee;border-radius:14px;box-shadow:0 5px 19px #2c59332a;padding:9px 12px;pointer-events:auto}
-.fullscreen-btn{position:absolute;z-index:12;top:calc(8px + env(safe-area-inset-top,0px));right:calc(9px + env(safe-area-inset-right,0px));display:flex;align-items:center;justify-content:center;gap:5px;width:100px;height:44px;border:2px solid #e8f4b8;border-radius:12px;background:#316b43;color:#fff;box-shadow:0 3px 0 #245838,0 6px 15px #223f3270;padding:0 8px;font-size:11px;line-height:1.1;font-weight:800;letter-spacing:.1px;white-space:nowrap}
-.fullscreen-btn .fs-label{display:block}
-.fullscreen-btn svg{flex:none}
-.fullscreen-btn:active{transform:scale(.96)}
-.fullscreen-btn .fs-exit{display:none}
-.fullscreen-btn[aria-pressed="true"] .fs-enter{display:none}
-.fullscreen-btn[aria-pressed="true"] .fs-exit{display:block}
-#game:fullscreen,#game:-webkit-full-screen{height:100vh;height:100dvh;width:100vw}
-.logo{display:flex;align-items:center;gap:7px;font-size:14px}.logo strong{font-size:15px}.logo small{font-size:10px;color:#749069}.stats{display:flex;gap:6px}.stats span{display:block;font-size:14px;font-weight:700}
-.zoom{position:absolute;z-index:3;right:calc(8px + env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);display:grid;gap:6px}
-.zoom button{width:40px;height:40px;border:1px solid #fff7;border-radius:11px;background:#fff9e9ee;color:#456c48;font-size:24px;font-weight:800;box-shadow:0 4px 12px #284a3830}
-.bar{position:absolute;bottom:calc(7px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:3;width:min(630px,calc(100% - 96px));padding:8px 10px 10px;background:#fff9eaf2;border:1px solid #fff9;border-radius:17px;box-shadow:0 9px 26px #345f393e}
-.bar-title{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:6px}.bar-title strong{font-size:12px}.bar-title small{font-size:10px;color:#70856d}
+#map{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#map:active{cursor:grabbing}
+
+/* HUD superior; sem reservar espaço para fullscreen, agora junto ao zoom. */
+.topbar{position:absolute;z-index:2;top:0;left:0;right:0;
+ padding:calc(8px + env(safe-area-inset-top,0px)) calc(10px + env(safe-area-inset-right,0px)) 0 calc(10px + env(safe-area-inset-left,0px));
+ display:flex;align-items:flex-start;justify-content:space-between;gap:8px;pointer-events:none}
+.logo,.stats span{border:1px solid #ffffffb0;background:#fff9e9ee;border-radius:14px;
+ box-shadow:0 5px 19px #2c59332a;padding:9px 12px;pointer-events:auto}
+.logo{display:flex;align-items:center;gap:7px;font-size:14px;white-space:nowrap}
+.logo strong{font-size:15px}
+.logo small,.logo .version{font-size:10px;color:#749069;display:inline!important}
+.stats{display:flex;gap:6px}
+.stats span{display:block;white-space:nowrap;font-size:14px;font-weight:700}
+
+/* Todos os controles no MESMO container; mesma posição e alinhamento.
+   O terceiro botão é o fullscreen, imediatamente abaixo do −. */
+.zoom{position:absolute;z-index:10;right:calc(8px + env(safe-area-inset-right,0px));top:50%;
+ transform:translateY(-50%);display:grid;grid-template-columns:40px;gap:6px}
+.zoom button{position:static;display:flex;align-items:center;justify-content:center;
+ width:40px;height:40px;min-width:0;margin:0;padding:0;
+ border:1px solid #fff9;border-radius:11px;
+ background:#fff9e9f2;color:#456c48;font-size:24px;font-weight:800;
+ box-shadow:0 4px 12px #284a3830}
+.zoom #fullscreen{background:#286e43;color:#fff;border:2px solid #fff;
+ font-size:26px;line-height:1;box-shadow:0 4px 12px #1d4d3b66}
+.zoom button:active{transform:scale(.95)}
+.zoom #fullscreen[aria-pressed="true"]{background:#3e8751}
+#game:fullscreen,#game:-webkit-full-screen{width:100vw;height:100vh;height:100dvh}
+
+.bar{position:absolute;z-index:3;bottom:calc(7px + env(safe-area-inset-bottom,0px));
+ left:50%;transform:translateX(-50%);width:min(630px,calc(100% - 96px));
+ padding:8px 10px 10px;background:#fff9eaf2;border:1px solid #fff9;
+ border-radius:17px;box-shadow:0 9px 26px #345f393e}
+.bar-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.bar-title strong{font-size:12px}
+.bar-title small{font-size:10px;color:#70856d}
 .seeds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
-.seed{border:2px solid #dfe5c6;background:#fffdf4;border-radius:11px;padding:8px 7px;display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;color:#34533c}
-.seed.active{border-color:#71a74e;background:#e9f5d9}.seed .emoji{font-size:24px}.seed .detail{display:flex;flex-direction:column;align-items:flex-start}.seed b{font-size:12px}.seed small{font-size:10px;color:#70856d}
-.toast{position:absolute;z-index:4;bottom:125px;left:50%;transform:translateX(-50%);max-width:90%;padding:8px 15px;background:#2c5949eb;color:#fff;border-radius:16px;font-size:12px;font-weight:700;opacity:0;transition:opacity .16s;pointer-events:none;text-align:center}.toast.visible{opacity:1}
+.seed{border:2px solid #dfe5c6;background:#fffdf4;border-radius:11px;
+ padding:8px 7px;display:flex;align-items:center;justify-content:center;gap:6px;
+ min-width:0;color:#34533c}
+.seed.active{border-color:#71a74e;background:#e9f5d9}
+.seed .emoji{font-size:24px}
+.seed .detail{display:flex;flex-direction:column;align-items:flex-start}
+.seed b{font-size:12px}
+.seed small{font-size:10px;color:#70856d}
+
+.toast{position:absolute;z-index:4;bottom:125px;left:50%;transform:translateX(-50%);
+ max-width:90%;padding:8px 15px;background:#2c5949eb;color:#fff;
+ border-radius:16px;font-size:12px;font-weight:700;opacity:0;
+ transition:opacity .16s;pointer-events:none;text-align:center}
+.toast.visible{opacity:1}
 .rotate{display:none}
+
 @media(orientation:landscape) and (max-height:540px){
-.logo,.stats span{padding:5px 8px;border-radius:11px}
-.fullscreen-btn{width:99px;height:36px;border-radius:10px;font-size:11px}
-.fullscreen-btn svg{width:20px;height:20px}.logo strong,.stats span{font-size:12px}.logo small{display:none}
-.zoom button{width:34px;height:34px;font-size:20px}
-.bar{padding:5px 7px 6px;border-radius:13px}.bar-title{margin-bottom:4px}
-.seed{padding:4px 5px}.seed .emoji{font-size:19px}.seed b{font-size:11px}.seed small{font-size:9px}
-.toast{bottom:84px}
-}
-@media(orientation:landscape) and (max-width:680px){.bar-title small{display:none}.logo strong{font-size:11px}.stats span{font-size:11px}.stats{gap:4px}}
-@media(orientation:portrait) and (max-width:950px){.rotate{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:linear-gradient(135deg,#dceebb,#8ab777)}.rotate div{font-size:60px}.rotate strong{font-size:24px}.rotate p{font-weight:600}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
-
-/* Os indicadores não podem ocupar a área reservada à tela cheia. */
-@media (orientation:landscape) and (max-width:540px){
- .logo strong,.logo small{display:none}
- .logo{padding:5px 7px}
- .topbar{padding-right:calc(113px + env(safe-area-inset-right,0px))}
- .stats span{font-size:10px;padding:4px 5px}
-}
-
-/* V0.2.2: reserva explícita para botão fixo de fullscreen.
-   Mantemos também os estilos inline para exibi-lo caso CSS antigo esteja em cache. */
-.topbar{padding-right:calc(151px + env(safe-area-inset-right,0px))}
-.fullscreen-btn{position:fixed!important;top:calc(12px + env(safe-area-inset-top,0px))!important;right:calc(12px + env(safe-area-inset-right,0px))!important;z-index:1000!important;min-width:124px!important;width:auto!important;height:43px!important;background:#236b37!important;color:#fff!important;border:2px solid #fff!important;font-size:12px!important}
-.fullscreen-btn .fs-label{display:inline!important}
-@media (orientation:landscape) and (max-height:540px){
- .topbar{padding-right:calc(141px + env(safe-area-inset-right,0px))}
- .fullscreen-btn{height:39px!important}
-}
-@media (orientation:landscape) and (max-width:670px){
- .topbar .logo strong,.topbar .logo small{display:none}
- .topbar .stats{min-width:0}
- .topbar .stats span{white-space:nowrap;padding:5px 6px}
-}
-
-/* V0.2.3 — barra superior validada em cinco resoluções no Chromium.
-   O canto direito fica reservado à ação de tela cheia. */
-.topbar{padding-right:calc(147px + env(safe-area-inset-right,0px))!important}
-.logo{white-space:nowrap;min-width:0}
-.logo .version{display:inline!important}
-.stats{min-width:0}
-.stats span{white-space:nowrap}
-.fullscreen-btn{width:129px!important;min-width:129px!important;height:42px!important;
-  top:calc(8px + env(safe-area-inset-top,0px))!important;
-  right:calc(10px + env(safe-area-inset-right,0px))!important;
-  background:#236b37!important;color:#fff!important;
-  border:2px solid #fff!important;font-size:12px!important;z-index:1000!important}
-.fullscreen-btn .fs-label{display:inline!important}
-.fullscreen-btn .fs-glyph{font-size:22px}
-@media(orientation:landscape) and (max-height:540px){
- .topbar{padding-right:calc(147px + env(safe-area-inset-right,0px))!important}
- .fullscreen-btn{height:38px!important}
- .logo small{display:inline!important;font-size:9px}
+ .logo,.stats span{padding:5px 8px;border-radius:11px}
+ .logo strong,.stats span{font-size:12px}
+ .logo small,.logo .version{font-size:9px}
+ .zoom{grid-template-columns:34px;gap:6px}
+ .zoom button{width:34px;height:34px;font-size:20px}
+ .zoom #fullscreen{font-size:23px}
+ .bar{padding:5px 7px 6px;border-radius:13px}
+ .bar-title{margin-bottom:4px}
+ .seed{padding:4px 5px}
+ .seed .emoji{font-size:19px}
+ .seed b{font-size:11px}
+ .seed small{font-size:9px}
+ .toast{bottom:84px}
 }
 @media(orientation:landscape) and (max-width:680px){
- .topbar .logo strong{display:none}
+ .bar-title small{display:none}
+ .logo strong{display:none}
  .stats{gap:4px}
- .stats span{font-size:10px;padding:5px}
+ .stats span{font-size:11px;padding:5px 6px}
 }
+@media(orientation:portrait) and (max-width:950px){
+ .rotate{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;text-align:center;padding:20px;
+ background:linear-gradient(135deg,#dceebb,#8ab777)}
+ .rotate div{font-size:60px}
+ .rotate strong{font-size:24px}
+ .rotate p{font-weight:600}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
