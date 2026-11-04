@@ -1,7 +1,7 @@
 // Terreno estático da fazenda. A camada é desenhada uma vez e reutilizada
 // pela câmera: evita redesenhar cada losango em todos os frames no celular.
 import {MAP_SIZE, TILE_W, TILE_H, PLOTS} from '../../config/gameConfig.js';
-import {drawPond} from './pond.js';
+import {drawPond} from './pond.js?v=025';
 
 const H_W = TILE_W / 2;
 const H_H = TILE_H / 2;
