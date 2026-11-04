@@ -1,6 +1,7 @@
 // Terreno estático da fazenda. A camada é desenhada uma vez e reutilizada
 // pela câmera: evita redesenhar cada losango em todos os frames no celular.
 import {MAP_SIZE, TILE_W, TILE_H, PLOTS} from '../../config/gameConfig.js';
+import {drawPond} from './pond.js';
 
 const H_W = TILE_W / 2;
 const H_H = TILE_H / 2;
@@ -141,5 +142,7 @@ export function createTerrainLayer() {
       else meadow(ctx,p.x,p.y,r,c);
     }
   }
+  // Lago ornamental desenhado na camada do terreno, fora dos canteiros.
+  drawPond(ctx,175,145);
   return {canvas,offsetX:-offsetX,offsetY:-offsetY};
 }
