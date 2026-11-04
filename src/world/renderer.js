@@ -1,5 +1,6 @@
 import {MAP_SIZE,TILE_W,TILE_H,PLOTS,TREES,CROPS} from '../config/gameConfig.js';
 import {createTerrainLayer} from './art/terrain.js';
+import {initialFarmView} from './camera.js';
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const key=(r,c)=>r+':'+c;
 function polygon(ctx,p,fill,stroke){ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0],p[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
@@ -37,12 +38,12 @@ function crop(ctx,x,y,p,time){
  const item=CROPS[p.seed];if(!item)return;
  const progress=clamp((Date.now()-p.at)/item.ms,0,1);
  for(const [dx,dy] of [[-20,0],[-9,-6],[8,-8],[23,1],[-1,8]]){
-  const h=6+progress*16;
+  const h=7+progress*34;
   line(ctx,x+dx,y+dy,x+dx,y+dy-h,'#4b9148',2);
-  ellipse(ctx,x+dx-3,y+dy-h*.8,5,3,'#74b65a');
-  if(progress>.72)ellipse(ctx,x+dx,y+dy-h-2,4,6,item.color);
+  ellipse(ctx,x+dx-4,y+dy-h*.72,6,3,'#74b65a');
+  if(progress>.62)ellipse(ctx,x+dx,y+dy-h-2,5+progress*2,7+progress*2,item.color);
  }
- if(progress>=1){ellipse(ctx,x,y-38,11,10,'#fff6ce');ctx.font='bold 16px sans-serif';ctx.fillStyle='#42804b';ctx.textAlign='center';ctx.fillText('✓',x,y-33);}
+ if(progress>=1){ellipse(ctx,x,y-56,11,10,'#fff6ce');ctx.font='bold 16px sans-serif';ctx.fillStyle='#42804b';ctx.textAlign='center';ctx.fillText('✓',x,y-51);}
 }
 export class Renderer{
  constructor(canvas,state){
@@ -52,18 +53,23 @@ export class Renderer{
   this.resize();
  }
  resize(){
-  const rect=this.canvas.getBoundingClientRect(),w=rect.width||innerWidth,h=rect.height||innerHeight;
-  const previous=this.width;this.width=w;this.height=h;
+  const oldW=this.width,oldH=this.height;
+  const focus=(oldW && this.manualView)?this.toWorld(oldW/2,oldH/2):null;
+  const rect=this.canvas.getBoundingClientRect();
+  const w=rect.width||innerWidth,h=rect.height||innerHeight;
+  this.width=w;this.height=h;
   this.dpr=Math.min(2,window.devicePixelRatio||1);
-  this.canvas.width=Math.round(w*this.dpr);this.canvas.height=Math.round(h*this.dpr);
-  if(previous){this.x+=(w-previous)/2;this.y+=(h-this.oldHeight)/2;}else this.recenter();
-  this.oldHeight=h;
+  this.canvas.width=Math.round(w*this.dpr);
+  this.canvas.height=Math.round(h*this.dpr);
+  if(focus){
+   this.x=w/2-focus.x*this.scale;
+   this.y=h/2-focus.y*this.scale;
+  }else this.recenter();
  }
  recenter(){
-  const widthFit=(this.width-40)/(MAP_SIZE*TILE_W);
-  const heightFit=(this.height-(this.height<540?95:180))/(MAP_SIZE*TILE_H);
-  this.scale=clamp(Math.min(widthFit,heightFit)*1.08,.3,1.1);
-  this.x=this.width/2;this.y=this.height*.44-((MAP_SIZE-1)*TILE_H/2)*this.scale;
+  const view=initialFarmView(this.width,this.height);
+  this.scale=view.scale;this.x=view.x;this.y=view.y;
+  this.manualView=false;
  }
  tile(r,c){return {x:(c-r)*TILE_W/2,y:(c+r)*TILE_H/2};}
  toWorld(x,y){return {x:(x-this.x)/this.scale,y:(y-this.y)/this.scale};}
@@ -75,6 +81,7 @@ export class Renderer{
  }
  zoom(factor,x=this.width/2,y=this.height*.44){
   const before=this.toWorld(x,y);this.scale=clamp(this.scale*factor,.28,1.8);this.x=x-before.x*this.scale;this.y=y-before.y*this.scale;
+  this.manualView=true;
  }
  render(t){
   const ctx=this.ctx,w=this.width,h=this.height;
@@ -88,7 +95,10 @@ export class Renderer{
   actors.push({r:3,c:9,type:'house'},{r:8,c:11,type:'barn'});
   for(const [id,p] of Object.entries(this.state.plants)){if(PLOTS.has(id)){const [r,c]=id.split(':').map(Number);actors.push({r,c,type:'crop',p});}}
   actors.sort((a,b)=>(a.r+a.c)-(b.r+b.c));
-  for(const a of actors){const q=this.tile(a.r,a.c);if(a.type==='tree')tree(ctx,q.x,q.y,a.i,t);else if(a.type==='house')house(ctx,q.x,q.y);else if(a.type==='barn')barn(ctx,q.x,q.y);else crop(ctx,q.x,q.y,a.p,t);}
+  for(const a of actors){const q=this.tile(a.r,a.c);if(a.type==='tree')tree(ctx,q.x,q.y,a.i,t);
+   else if(a.type==='house'){ctx.save();ctx.translate(q.x,q.y);ctx.scale(1.32,1.32);house(ctx,0,0);ctx.restore();}
+   else if(a.type==='barn'){ctx.save();ctx.translate(q.x,q.y);ctx.scale(1.22,1.22);barn(ctx,0,0);ctx.restore();}
+   else crop(ctx,q.x,q.y,a.p,t);}
   if(this.hover&&PLOTS.has(key(this.hover.r,this.hover.c))){const q=this.tile(this.hover.r,this.hover.c);ctx.strokeStyle='#fff2a4';ctx.lineWidth=3;diamond(ctx,q.x,q.y,'#fff7a322','#fff2a4');}
   ctx.restore();
  }
