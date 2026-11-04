@@ -18,7 +18,7 @@ export class PointerControls{
    this.pinch=d;this.moved=true;return;
   }
   if(this.start&&Math.hypot(e.clientX-this.start.x,e.clientY-this.start.y)>7)this.moved=true;
-  if(this.moved){this.renderer.x+=e.clientX-old.x;this.renderer.y+=e.clientY-old.y;}
+  if(this.moved){this.renderer.x+=e.clientX-old.x;this.renderer.y+=e.clientY-old.y;this.renderer.manualView=true;}
   else this.renderer.hover=this.renderer.hit(e.clientX,e.clientY);
  }
  up(e,cancelled=false){
