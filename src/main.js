@@ -1,7 +1,7 @@
 import {CROPS} from './config/gameConfig.js';
 import {loadState,saveState,interact,levelOf} from './systems/farm.js';
-import {Renderer} from './world/renderer.js';
-import {PointerControls} from './input/pointer.js';
+import {Renderer} from './world/renderer.js?v=025';
+import {PointerControls} from './input/pointer.js?v=025';
 import {setupFullscreen} from './ui/fullscreen.js';
 const state=loadState(),canvas=document.getElementById('map'),renderer=new Renderer(canvas,state);
 const $=id=>document.getElementById(id),seeds=$('seeds');
