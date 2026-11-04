@@ -2,6 +2,7 @@ import {CROPS} from './config/gameConfig.js';
 import {loadState,saveState,interact,levelOf} from './systems/farm.js';
 import {Renderer} from './world/renderer.js';
 import {PointerControls} from './input/pointer.js';
+import {setupFullscreen} from './ui/fullscreen.js';
 const state=loadState(),canvas=document.getElementById('map'),renderer=new Renderer(canvas,state);
 const $=id=>document.getElementById(id),seeds=$('seeds');
 let timer;
@@ -18,6 +19,12 @@ for(const [id,item] of Object.entries(CROPS)){
  button.onclick=()=>{state.selectedSeed=id;saveState(state);update();notify(item.name+' selecionado');};
  seeds.append(button);
 }
+setupFullscreen({
+ root:document.getElementById('game'),
+ button:$('fullscreen'),
+ onFeedback:notify,
+ onResize:()=>renderer.resize()
+});
 new PointerControls(canvas,renderer,(r,c)=>{const res=interact(state,r,c);if(res.changed)update();notify(res.message);});
 $('plus').onclick=()=>renderer.zoom(1.14);
 $('minus').onclick=()=>renderer.zoom(1/1.14);
