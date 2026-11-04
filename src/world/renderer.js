@@ -1,6 +1,8 @@
 import {MAP_SIZE,TILE_W,TILE_H,PLOTS,TREES,CROPS} from '../config/gameConfig.js';
 import {createTerrainLayer} from './art/terrain.js?v=025';
 import {initialFarmView} from './camera.js?v=025';
+import {loadFarmSprites,drawFarmSprite} from './art/sprites.js?v=026';
+import {drawCropIllustrated} from './art/crops.js?v=026';
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const key=(r,c)=>r+':'+c;
 function polygon(ctx,p,fill,stroke){ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0],p[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
@@ -34,22 +36,12 @@ function tree(ctx,x,y,seed,time){
  for(const [dx,dy,r,color] of [[-18,-58,22,'#5a9b57'],[10,-70,24,'#65a75e'],[23,-49,21,'#74b469'],[-5,-83,20,'#80b86b'],[0,-42,23,'#508e51']])
   ellipse(ctx,x+dx+sw,y+dy,r,r*.85,color);
 }
-function crop(ctx,x,y,p,time){
- const item=CROPS[p.seed];if(!item)return;
- const progress=clamp((Date.now()-p.at)/item.ms,0,1);
- for(const [dx,dy] of [[-20,0],[-9,-6],[8,-8],[23,1],[-1,8]]){
-  const h=7+progress*34;
-  line(ctx,x+dx,y+dy,x+dx,y+dy-h,'#4b9148',2);
-  ellipse(ctx,x+dx-4,y+dy-h*.72,6,3,'#74b65a');
-  if(progress>.62)ellipse(ctx,x+dx,y+dy-h-2,5+progress*2,7+progress*2,item.color);
- }
- if(progress>=1){ellipse(ctx,x,y-56,11,10,'#fff6ce');ctx.font='bold 16px sans-serif';ctx.fillStyle='#42804b';ctx.textAlign='center';ctx.fillText('✓',x,y-51);}
-}
 export class Renderer{
  constructor(canvas,state){
   this.canvas=canvas;this.ctx=canvas.getContext('2d');this.state=state;
   this.scale=.65;this.x=0;this.y=0;this.hover=null;this.width=0;this.height=0;
   this.terrain=createTerrainLayer();
+  this.sprites=loadFarmSprites();
   this.resize();
  }
  resize(){
@@ -95,10 +87,20 @@ export class Renderer{
   actors.push({r:3,c:9,type:'house'},{r:8,c:11,type:'barn'});
   for(const [id,p] of Object.entries(this.state.plants)){if(PLOTS.has(id)){const [r,c]=id.split(':').map(Number);actors.push({r,c,type:'crop',p});}}
   actors.sort((a,b)=>(a.r+a.c)-(b.r+b.c));
-  for(const a of actors){const q=this.tile(a.r,a.c);if(a.type==='tree')tree(ctx,q.x,q.y,a.i,t);
-   else if(a.type==='house'){ctx.save();ctx.translate(q.x,q.y);ctx.scale(1.32,1.32);house(ctx,0,0);ctx.restore();}
-   else if(a.type==='barn'){ctx.save();ctx.translate(q.x,q.y);ctx.scale(1.22,1.22);barn(ctx,0,0);ctx.restore();}
-   else crop(ctx,q.x,q.y,a.p,t);}
+  for(const a of actors){
+   const q=this.tile(a.r,a.c);
+   if(a.type==='tree'){
+    if(!drawFarmSprite(ctx,this.sprites.tree,q.x-61,q.y-134,122,146))tree(ctx,q.x,q.y,a.i,t);
+   } else if(a.type==='house'){
+    if(!drawFarmSprite(ctx,this.sprites.house,q.x-120,q.y-200,240,225)){
+     ctx.save();ctx.translate(q.x,q.y);ctx.scale(1.32,1.32);house(ctx,0,0);ctx.restore();
+    }
+   } else if(a.type==='barn'){
+    if(!drawFarmSprite(ctx,this.sprites.barn,q.x-105,q.y-175,210,195)){
+     ctx.save();ctx.translate(q.x,q.y);ctx.scale(1.22,1.22);barn(ctx,0,0);ctx.restore();
+    }
+   } else drawCropIllustrated(ctx,q.x,q.y,a.p,t);
+  }
   if(this.hover&&PLOTS.has(key(this.hover.r,this.hover.c))){const q=this.tile(this.hover.r,this.hover.c);ctx.strokeStyle='#fff2a4';ctx.lineWidth=3;diamond(ctx,q.x,q.y,'#fff7a322','#fff2a4');}
   ctx.restore();
  }
