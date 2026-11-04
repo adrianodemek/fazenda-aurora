@@ -2,28 +2,30 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 
-const page=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const css=readFileSync(new URL('../src/styles/game.css',import.meta.url),'utf8');
+const controls=html.match(/<aside class="zoom"[\s\S]*?<\/aside>/)?.[0];
 
-test('botão de tela cheia aparece uma única vez na página',()=>{
-  assert.equal((page.match(/id="fullscreen"/g)||[]).length,1);
-  assert.match(page,/TELA CHEIA/);
-  assert.match(page,/aria-label="Entrar em tela cheia"/);
+test('botão fullscreen aparece uma vez dentro da coluna do zoom',()=>{
+ assert.ok(controls,'coluna zoom ausente');
+ assert.equal((html.match(/id="fullscreen"/g)||[]).length,1);
+ assert.match(controls,/id="fullscreen"/);
+ const ids=[...controls.matchAll(/id="(plus|minus|fullscreen|center)"/g)].map(m=>m[1]);
+ assert.deepEqual(ids,['plus','minus','fullscreen','center']);
 });
-
-test('tela cheia tem posição fixa, prioridade e espaço reservado',()=>{
-  assert.match(page,/position:fixed;z-index:1000/);
-  assert.match(page,/right:calc\(10px \+ env\(safe-area-inset-right,0px\)\)/);
-  assert.match(css,/topbar\{padding-right:calc\(147px/);
+test('fullscreen usa a mesma posição dos botões do zoom, sem posição fixa',()=>{
+ assert.match(css,/\.zoom\s*\{position:absolute/);
+ assert.match(css,/\.zoom #fullscreen\s*\{/);
+ assert.doesNotMatch(css,/\.fullscreen-btn|fullscreen-btn\{/);
+ assert.doesNotMatch(controls,/position:fixed/);
 });
-
-test('versão visível e assets com cache atualizado',()=>{
-  assert.match(page,/V0\.2\.3/);
-  assert.match(page,/game\.css\?v=023/);
-  assert.match(page,/main\.js\?v=023/);
+test('versão e assets sem cache antigo',()=>{
+ assert.match(html,/V0\.2\.4/);
+ assert.match(html,/game\.css\?v=024/);
+ assert.match(html,/main\.js\?v=024/);
 });
-
-test('jogo mantém entrada modular',()=>{
-  assert.match(page,/type="module" src="\.\/src\/main\.js/);
-  assert.ok(page.length<6000,'HTML principal não deve virar arquivo monolítico');
+test('interface enxuta e acessível',()=>{
+ assert.match(controls,/aria-label="Entrar em tela cheia"/);
+ assert.match(html,/type="module" src="\.\/src\/main\.js/);
+ assert.ok(html.length<6000);
 });
