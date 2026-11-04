@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 310">
+<defs>
+ <linearGradient id="wallL" x1="0" y1="0" x2="1" y2=".4"><stop stop-color="#fffae4"/><stop offset="1" stop-color="#ebd6ac"/></linearGradient>
+ <linearGradient id="wallR" x1="0" y1="0" x2="1" y2=".7"><stop stop-color="#fff9e9"/><stop offset="1" stop-color="#f2deb5"/></linearGradient>
+ <linearGradient id="roofFront" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ef8a57"/><stop offset=".5" stop-color="#d45b3d"/><stop offset="1" stop-color="#a93f35"/></linearGradient>
+ <linearGradient id="roofSide" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f38b52"/><stop offset="1" stop-color="#bd4836"/></linearGradient>
+ <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#94d9e2"/><stop offset="1" stop-color="#458fac"/></linearGradient>
+ <filter id="sh"><feGaussianBlur stdDeviation="5"/></filter>
+ <clipPath id="roofClip"><path d="M51 121 120 53 177 89 239 50 316 121 252 152 191 124 125 163Z"/></clipPath>
+</defs>
+<ellipse cx="169" cy="273" rx="124" ry="26" fill="#3b6e3f" opacity=".28" filter="url(#sh)"/>
+<path d="M58 157 155 109 255 149 255 238 160 282 58 237Z" fill="#a78662" opacity=".34"/>
+<path d="M58 154 160 102 160 267 58 229Z" fill="url(#wallL)" stroke="#c1a47e" stroke-width="3" stroke-linejoin="round"/>
+<path d="M160 102 265 150 265 229 160 267Z" fill="url(#wallR)" stroke="#c5a983" stroke-width="3" stroke-linejoin="round"/>
+<path d="M61 217 160 251 264 215 264 233 161 275 60 233Z" fill="#d6b58a" stroke="#c0a17c" stroke-width="2"/>
+<path d="M75 175 105 159 130 171 130 214 102 229 75 215Z" fill="#f7eaca" opacity=".6"/>
+<path d="M74 180 105 165 105 214 74 227Z" fill="#6c9eaa" stroke="#f8f3db" stroke-width="5"/>
+<path d="M106 165 135 178 135 216 106 213Z" fill="#79bbc7" stroke="#f8f3db" stroke-width="5"/>
+<path d="M78 184 104 174 104 205 78 217Z" fill="url(#glass)"/><path d="M109 173 131 184 131 205 109 205Z" fill="url(#glass)"/>
+<path d="M104 170 104 221M75 201 134 196" stroke="#e8f2e6" stroke-width="4"/>
+<path d="M175 178 206 193 206 252 175 265Z" fill="#a16b43" stroke="#754a36" stroke-width="4"/>
+<path d="M179 187 200 196 200 239 179 250Z" fill="#bb8856"/>
+<path d="M195 223 a3.5 3.5 0 1 0 7 0 a3.5 3.5 0 1 0 -7 0" fill="#f4db8a"/>
+<path d="M228 182 252 193 252 213 228 204Z" fill="#6aaabd" stroke="#fff8df" stroke-width="6"/><path d="M240 187v22" stroke="#fff6db" stroke-width="3"/>
+<path d="M175 264 196 273 221 260 204 252Z" fill="#d7bb8d"/><path d="M185 272 205 282 231 268 213 261Z" fill="#e6c997"/>
+<!-- terra-cotta roof with real illustrated thickness -->
+<path d="M45 137 121 53 176 81 235 51 320 119 267 142 236 127 164 172 113 149 61 164Z" fill="#9e4037" stroke="#8e4137" stroke-width="5" stroke-linejoin="round"/>
+<path d="M46 132 117 58 164 91 225 56 309 120 249 141 229 123 162 163 113 138 61 158Z" fill="url(#roofFront)"/>
+<path d="M117 58 163 91 225 56 168 33Z" fill="#f5a169" stroke="#a94c39" stroke-width="3"/>
+<path d="M168 33 225 56 309 120 252 141Z" fill="url(#roofSide)" stroke="#aa4935" stroke-width="3"/>
+<path d="M45 132 117 58 163 91 111 147 61 158Z" fill="#ec8050" stroke="#b34b3c" stroke-width="3"/>
+<g clip-path="url(#roofClip)" stroke="#a74435" stroke-width="2.5" opacity=".45" fill="none">
+ <path d="M59 142 121 81 160 108 M72 153 132 94 171 118 M104 146 148 104"/>
+ <path d="M190 54 272 116 M207 49 294 116 M228 62 302 131"/>
+ <path d="M79 108 136 139 M92 88 152 119 M111 66 157 100"/>
+</g>
+<g fill="#f4b37a" opacity=".6"><path d="M62 132 115 78 125 83 77 134Z"/><path d="M232 66 271 99 267 104 225 72Z"/><path d="M129 64 153 82 148 86 122 69Z"/></g>
+<!-- chimney and flashing -->
+<path d="M239 66 239 29 258 21 273 29 273 89 259 96Z" fill="#d58a60" stroke="#9b5744" stroke-width="4"/>
+<path d="M238 29 256 18 278 28 259 39Z" fill="#edac77" stroke="#9b5744" stroke-width="3"/>
+<path d="M245 40 245 72M266 40 266 81" stroke="#bf7754" stroke-width="3"/>
+<!-- small striped awning -->
+<path d="M68 155 106 137 139 152 102 174Z" fill="#fff9e8" stroke="#d2806c" stroke-width="3"/>
+<path d="M72 154 80 149 112 162 103 167Z M89 145 98 141 130 155 121 159Z" fill="#de876e"/>
+<!-- colorful climbing roses -->
+<g stroke="#49834d" stroke-width="4" fill="none"><path d="M62 236Q41 207 53 181 M58 221Q70 203 73 188 M256 234Q284 206 273 189"/></g>
+<g fill="#6cae65"><ellipse cx="49" cy="206" rx="12" ry="6" transform="rotate(-22 49 206)"/><ellipse cx="69" cy="213" rx="12" ry="6" transform="rotate(20 69 213)"/><ellipse cx="270" cy="211" rx="11" ry="6" transform="rotate(-27 270 211)"/></g>
+<g fill="#ef9c91"><circle cx="52" cy="191" r="5"/><circle cx="66" cy="204" r="5"/><circle cx="274" cy="190" r="6"/></g>
+<path d="M39 256q18-18 38-6 20-16 37-4M237 255q17-13 35 0 20-7 34-1" fill="#77a85e" stroke="#5b9552" stroke-width="3"/>
+<g fill="#f3e3a1"><circle cx="52" cy="254" r="3"/><circle cx="81" cy="255" r="3"/><circle cx="274" cy="258" r="3"/></g>
+</svg>
