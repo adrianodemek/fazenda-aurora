@@ -2,7 +2,14 @@
 
 Jogo de fazenda 2D isométrico inspirado na jogabilidade social clássica, com visual modernizado. **Mobile-first em landscape**, também compatível com PC.
 
-## V0.1
+## V0.2 (primeira etapa: terreno e canteiros)
+- Grama com variação de tons, pequenos tufos, flores e caminhos
+- Canteiros com profundidade, sulcos e relevo em desenho 2D isométrico
+- Renderização do chão armazenada em uma camada Canvas estática para poupar processamento
+- Sem mudanças nas regras de plantio, colheita, moedas e salvamento
+- Os desenhos ainda são provisórios; sprites artísticos definitivos virão em etapas
+
+## Base funcional herdada da V0.1
 - Mapa isométrico 14 × 14 com 30 canteiros e elementos provisórios
 - Trigo, cenoura e morango; crescimento mesmo quando o jogo está fechado
 - Moedas, experiência, nível e salvamento local (neste navegador)
@@ -24,7 +31,8 @@ Abra http://localhost:8000 . Para publicar, configure GitHub Pages com a branch 
 - `src/styles/game.css`: interface e orientação horizontal
 - `src/config/gameConfig.js`: mapa e definições de cultivos
 - `src/systems/farm.js`: plantio, colheita, progressão e salvamento
-- `src/world/renderer.js`: mapa e desenhos isométricos (temporários)
+- `src/world/renderer.js`: câmera, composição do cenário e objetos dinâmicos
+- `src/world/art/terrain.js`: terreno isométrico estático, independente das regras
 - `src/input/pointer.js`: controle por toque e mouse
 - `src/main.js`: integração da interface com os módulos
 - `tests/`: testes automatizados (executar `npm test`)
