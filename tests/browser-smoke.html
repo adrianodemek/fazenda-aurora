@@ -34,7 +34,12 @@ const run=()=>{
    if(!(initial.scale>=minimumFarmZoom(925,390)))throw Error('zoom inicial incorreto');
    for(const asset of [
     '../public/assets/buildings/doghouse/level-01.svg',
-    '../public/assets/buildings/headquarters/level-01.webp'
+    '../public/assets/buildings/headquarters/level-01.webp',
+    '../public/assets/decor/animal-pen/fence-back.svg',
+    '../public/assets/decor/animal-pen/fence-front.svg',
+    '../public/assets/animals/cow.svg',
+    '../public/assets/animals/sheep.svg',
+    '../public/assets/animals/chicken.svg'
    ]){
     const response=await fetch(asset,{cache:'no-store'});
     if(!response.ok)throw Error('sprite não carregou: '+asset);
@@ -46,6 +51,17 @@ const run=()=>{
    if(!minus.disabled)throw Error('zoom - passou do enquadramento mínimo');
    const world=FARM_OBJECTS.headquarters;
    if(world.x<=FARM_OBJECTS.doghouse.x)throw Error('sede fora da posição');
+   if(world.x>=FARM_OBJECTS.animalPen.x)throw Error('curral não ficou à direita');
+   const position=p=>({
+     x:initial.x+p.x*initial.scale,
+     y:initial.y+p.y*initial.scale
+   });
+   const house=position(world),pen=position({
+    x:FARM_OBJECTS.animalPen.x+FARM_OBJECTS.animalPen.width/2,
+    y:FARM_OBJECTS.animalPen.y+FARM_OBJECTS.animalPen.height/2
+   });
+   if(house.x<=260||house.x>=680)throw Error('sede desalinhada no mobile');
+   if(pen.x<=630)throw Error('curral não aparece à direita');
    clearTimeout(timeout);
    finish('SMOKE_OK: cenário, sprites, câmera e zoom',true);
   }catch(error){finish('SMOKE_FAIL: '+error.message,false);}
