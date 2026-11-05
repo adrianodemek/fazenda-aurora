@@ -5,7 +5,7 @@ import {FARM_VIEW_REFERENCE,WORLD_BOUNDS} from './layout.js';
 // Escala é relativa à largura mobile; não afastamos abaixo desta visão inicial.
 export function minimumFarmZoom(width,height){
  const w=Math.max(1,width),h=Math.max(1,height);
- return Math.max(.28,w/1400,h/900);
+ return Math.max(.28,w/1260,h/820);
 }
 export function maximumFarmZoom(width,height){
  return minimumFarmZoom(width,height)*2.3;
@@ -32,11 +32,11 @@ export function initialFarmView(width,height){
  const scale=minimumFarmZoom(w,h);
  const {plotCenter,plotScreen}=FARM_VIEW_REFERENCE;
  // Telas muito baixas precisam elevar um pouco o conjunto para mostrar o lago.
- const verticalShift=clamp((440-h)*.30,0,45);
+ const mobileShift=Math.max(0,Math.min(.08,(450-h)*.0005));
  return constrainFarmCamera({
   scale,
   x:w*plotScreen.x-plotCenter.x*scale,
-  y:h*plotScreen.y-plotCenter.y*scale+verticalShift
+  y:h*(plotScreen.y+mobileShift)-plotCenter.y*scale
  },w,h);
 }
 
