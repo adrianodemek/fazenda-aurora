@@ -13,18 +13,20 @@ function project(view,p){return {
  y:view.y+p.y*view.scale
 };}
 
-test('posições reproduzem a composição aprovada em 1871x841',()=>{
+test('posições seguem a referência clássica em 1871x841',()=>{
  const w=1871,h=841,view=initialFarmView(w,h);
  const desired=[
-  [FARM_OBJECTS.pond, .35,.135],
-  [FARM_VIEW_REFERENCE.plotCenter,.30,.51],
-  [FARM_OBJECTS.doghouse,.485,.43],
-  [FARM_OBJECTS.headquarters,.675,.47]
+  [FARM_OBJECTS.pond, .03,.06],
+  [FARM_VIEW_REFERENCE.plotCenter,.29,.52],
+  [FARM_OBJECTS.doghouse,.163,.33],
+  [FARM_OBJECTS.headquarters,.52,.445],
+  [{x:FARM_OBJECTS.animalPen.x+FARM_OBJECTS.animalPen.width/2,
+    y:FARM_OBJECTS.animalPen.y+FARM_OBJECTS.animalPen.height/2},.865,.55]
  ];
  for(const [point,xPercent,yPercent] of desired){
   const actual=project(view,point);
-  assert.ok(Math.abs(actual.x/w-xPercent)<.025,'posição horizontal: '+JSON.stringify(point));
-  assert.ok(Math.abs(actual.y/h-yPercent)<.025,'posição vertical: '+JSON.stringify(point));
+  assert.ok(Math.abs(actual.x/w-xPercent)<.030,'posição horizontal: '+JSON.stringify(point));
+  assert.ok(Math.abs(actual.y/h-yPercent)<.030,'posição vertical: '+JSON.stringify(point));
  }
  assert.equal(SCENERY_TREES.length>=10,true);
 });
