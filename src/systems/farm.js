@@ -1,5 +1,6 @@
 import {CROPS,PLOTS,SAVE_KEY} from '../config/gameConfig.js';
-export function freshState(){return {coins:80,xp:0,selectedSeed:'wheat',plants:{},harvests:0};}
+import {normalizeHeadquartersLevel} from '../data/headquarters.js';
+export function freshState(){return {coins:80,xp:0,selectedSeed:'wheat',plants:{},harvests:0,headquartersLevel:1};}
 export function loadState(){
  const initial=freshState();
  try {
@@ -8,6 +9,7 @@ export function loadState(){
   if(Number.isFinite(raw.coins))initial.coins=Math.max(0,Math.floor(raw.coins));
   if(Number.isFinite(raw.xp))initial.xp=Math.max(0,Math.floor(raw.xp));
   if(Number.isFinite(raw.harvests))initial.harvests=Math.max(0,Math.floor(raw.harvests));
+  initial.headquartersLevel=normalizeHeadquartersLevel(raw.headquartersLevel);
   if(CROPS[raw.selectedSeed])initial.selectedSeed=raw.selectedSeed;
   if(raw.plants&&typeof raw.plants==='object')
    for(const [key,p] of Object.entries(raw.plants))
