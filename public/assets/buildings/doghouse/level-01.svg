@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 195">
+<defs>
+ <linearGradient id="roof" x1=".1" y1="0" x2=".9" y2="1">
+ <stop stop-color="#a2c0a2"/><stop offset=".55" stop-color="#668d71"/><stop offset="1" stop-color="#3f6b51"/>
+ </linearGradient>
+ <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1">
+ <stop stop-color="#f0c78e"/><stop offset=".55" stop-color="#d39a5e"/><stop offset="1" stop-color="#a76b42"/>
+ </linearGradient>
+ <linearGradient id="front" x1="0" y1="0" x2="1" y2="1">
+ <stop stop-color="#ffe7a9"/><stop offset="1" stop-color="#cf995e"/>
+ </linearGradient>
+ <filter id="shadow"><feGaussianBlur stdDeviation="3"/></filter>
+</defs>
+<ellipse cx="119" cy="171" rx="100" ry="17" fill="#386f3c" opacity=".28" filter="url(#shadow)"/>
+<!-- madeira nas laterais e base isométrica -->
+<path d="M46 95 126 55 195 91 195 149 126 181 45 146Z" fill="#986443" stroke="#814f32" stroke-width="4"/>
+<path d="M45 92 126 54 126 171 45 134Z" fill="url(#wood)" stroke="#9d673d" stroke-width="3"/>
+<path d="M126 54 195 91 195 143 126 171Z" fill="#c68b57" stroke="#936039" stroke-width="3"/>
+<path d="M126 171 195 143 207 150 127 186 38 146 45 134Z" fill="#b07d4c" stroke="#8c5b37" stroke-width="3"/>
+<g stroke="#a87447" stroke-width="2" opacity=".62">
+<path d="M46 114 126 153 M46 131 126 167 M139 68 139 166 M159 78 159 154 M179 84 179 148"/>
+</g>
+<!-- porta funda arredondada -->
+<path d="M68 142 68 108Q68 83 92 87Q117 94 117 119L117 164Z" fill="#6b4d35" stroke="#e7b67b" stroke-width="7"/>
+<path d="M77 142V112Q77 94 93 99Q108 104 108 120V158Z" fill="#493b30"/>
+<ellipse cx="96" cy="149" rx="10" ry="5" fill="#272a2c" opacity=".35"/>
+<!-- telhado verde em duas águas -->
+<path d="M25 103 82 30 127 46 193 74 212 109 126 81 74 128Z" fill="#426a4e" stroke="#395d45" stroke-width="5" stroke-linejoin="round"/>
+<path d="M25 101 82 34 127 49 74 121Z" fill="url(#roof)" stroke="#53785a" stroke-width="3"/>
+<path d="M82 34 144 26 213 106 126 78Z" fill="#709a77" stroke="#406e50" stroke-width="3"/>
+<path d="M26 101 74 121 125 79 212 107" fill="none" stroke="#375e49" stroke-width="7" stroke-linejoin="round"/>
+<g stroke="#b0caa3" stroke-width="2" opacity=".55">
+<path d="M52 84 92 50 M45 96 98 61 M110 38 170 88 M132 35 187 92"/>
+</g>
+<!-- pequena placa de madeira com patinha -->
+<path d="M145 112 176 101 176 124 145 135Z" fill="#f7dca8" stroke="#8d5f3d" stroke-width="3"/>
+<g fill="#926042"><ellipse cx="158" cy="119" rx="5" ry="4"/><circle cx="152" cy="113" r="1.8"/><circle cx="158" cy="110" r="1.8"/><circle cx="165" cy="111" r="1.8"/></g>
+<!-- tigela e flores discretas -->
+<path d="M25 164 52 164 48 175 30 175Z" fill="#6993ac" stroke="#456e82" stroke-width="2"/>
+<ellipse cx="39" cy="163" rx="15" ry="4" fill="#d0e1db" stroke="#5c899e" stroke-width="2"/>
+<path d="M195 158Q210 146 222 155" fill="none" stroke="#628f45" stroke-width="4"/>
+<g fill="#f3e1a5"><circle cx="202" cy="163" r="3"/><circle cx="216" cy="159" r="3"/></g>
+</svg>
