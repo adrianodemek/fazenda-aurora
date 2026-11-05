@@ -18,3 +18,23 @@ jobs:
         run: find src -name '*.js' -print0 | xargs -0 -n1 node --check
       - name: Testar plantio, renderer, fullscreen e interface
         run: npm test
+      - name: Testar o jogo em navegador Chrome real (mobile horizontal)
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          python3 -m http.server 8000 --bind 127.0.0.1 > /tmp/aurora-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          sleep 2
+          timeout 50 "$CHROME" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage \
+            --window-size=1120,740 --virtual-time-budget=10000 \
+            --dump-dom http://127.0.0.1:8000/tests/browser-smoke.html \
+            > /tmp/aurora-dom.html
+          if ! grep -q '<title>AURORA_BROWSER_PASS</title>' /tmp/aurora-dom.html; then
+            echo 'Smoke test do navegador falhou:'
+            grep -o 'SMOKE_FAIL[^<]*\|FALHA[^<]*' /tmp/aurora-dom.html | head -5 || true
+            exit 1
+          fi
+          echo 'Chrome confirmou: cenário, sprites e zoom funcionando.'
+
