@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<title>Aurora smoke pendente</title>
+<style>body{margin:0}iframe{width:925px;height:390px;border:0}</style></head>
+<body><div id="result">PENDING</div><iframe id="farm" src="../index.html"></iframe>
+<script type="module">
+import {initialFarmView,minimumFarmZoom} from '../src/world/camera.js';
+import {FARM_OBJECTS} from '../src/world/layout.js';
+const frame=document.getElementById('farm');
+const result=document.getElementById('result');
+let completed=false;
+const finish=(message,good)=>{
+ if(completed)return;completed=true;
+ result.textContent=message;
+ document.title=good?'AURORA_BROWSER_PASS':'AURORA_BROWSER_FAIL';
+};
+const timeout=setTimeout(()=>finish('FALHA: tempo limite',false),7500);
+frame.addEventListener('load',()=>{
+ setTimeout(async()=>{
+  try{
+   const doc=frame.contentDocument;
+   if(!doc)throw Error('iframe não acessível');
+   const canvas=doc.getElementById('map');
+   const minus=doc.getElementById('minus');
+   const plus=doc.getElementById('plus');
+   const full=doc.getElementById('fullscreen');
+   if(!canvas||!minus||!plus||!full)throw Error('interface incompleta');
+   if(canvas.width<300||canvas.height<150)throw Error('mapa não foi inicializado');
+   const testPixel=canvas.getContext('2d').getImageData(
+    Math.floor(canvas.width*.5),Math.floor(canvas.height*.5),1,1).data;
+   if(testPixel[3]===0)throw Error('mapa não foi desenhado');
+   const initial=initialFarmView(925,390);
+   if(!(initial.scale>=minimumFarmZoom(925,390)))throw Error('zoom inicial incorreto');
+   for(const asset of [
+    '../public/assets/buildings/doghouse/level-01.svg',
+    '../public/assets/buildings/headquarters/level-01.webp'
+   ]){
+    const response=await fetch(asset,{cache:'no-store'});
+    if(!response.ok)throw Error('sprite não carregou: '+asset);
+   }
+   if(!minus.disabled)throw Error('afastamento inicial está liberado');
+   plus.click();
+   if(minus.disabled)throw Error('zoom + não ativou o -');
+   minus.click();
+   if(!minus.disabled)throw Error('zoom - passou do enquadramento mínimo');
+   const world=FARM_OBJECTS.headquarters;
+   if(world.x<=FARM_OBJECTS.doghouse.x)throw Error('sede fora da posição');
+   clearTimeout(timeout);
+   finish('SMOKE_OK: cenário, sprites, câmera e zoom',true);
+  }catch(error){finish('SMOKE_FAIL: '+error.message,false);}
+ },1300);
+});
+</script></body></html>
