@@ -9,8 +9,7 @@ test('sede inicial tem um único arquivo de arte independente',()=>{
   const def=headquartersForLevel(1);
   assert.equal(def.name,'Sede Inicial');
   assert.equal(def.level,1);
-  assert.equal(def.row,3);
-  assert.equal(def.col,9);
+  assert.equal(def.positionKey,'headquarters');
   const file=new URL('../public/assets/buildings/headquarters/level-01.webp',import.meta.url);
   assert.ok(existsSync(file));
   assert.ok(statSync(file).size>5000);
