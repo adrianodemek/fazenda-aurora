@@ -1,5 +1,5 @@
 import {MAP_SIZE,TILE_W,TILE_H} from '../config/gameConfig.js';
-import {FARM_VIEW_REFERENCE,WORLD_BOUNDS} from './layout.js';
+import {FARM_VIEW_REFERENCE,WORLD_BOUNDS} from './layout.js?v=029';
 
 // A área útil sempre mostra a fazenda próxima, como a referência de 1871x841.
 // Escala é relativa à largura mobile; não afastamos abaixo desta visão inicial.
