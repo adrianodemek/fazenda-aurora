@@ -2,6 +2,14 @@
 
 Jogo de fazenda 2D isométrico inspirado na jogabilidade social clássica, com visual modernizado. **Mobile-first em landscape**, também compatível com PC.
 
+## V0.2.7 — Sede Inicial nostálgica
+- Novo sprite da Sede Inicial em `public/assets/buildings/headquarters/level-01.webp` (WebP com transparência, otimizado para mobile).
+- A sede é controlada por `headquartersLevel`, separado do nível de experiência.
+- Registro de sedes em `src/data/headquarters.js`, renderização isolada em `src/world/art/headquarters.js`.
+- Nenhuma opção de evolução foi ativada nesta versão; futuras sedes poderão substituir apenas a imagem e dimensões da construção.
+- Jogadores com progresso existente continuam com os mesmos canteiros, moedas, plantas e experiência.
+- Se a imagem não carregar, a casa anterior é exibida temporariamente como reserva.
+
 ## V0.2.6 — primeira arte ilustrada
 - Sprites SVG autorais e separados para casa, celeiro e árvores em `public/assets/sprites/`.
 - Cultivos redesenhados em módulo `src/world/art/crops.js`, com folhas e frutos por fase.
