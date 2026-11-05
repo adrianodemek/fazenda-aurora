@@ -1,11 +1,18 @@
 import {CROPS} from './config/gameConfig.js';
 import {loadState,saveState,interact,levelOf} from './systems/farm.js?v=027';
-import {Renderer} from './world/renderer.js?v=027';
-import {PointerControls} from './input/pointer.js?v=025';
+import {Renderer} from './world/renderer.js?v=028';
+import {minimumFarmZoom,maximumFarmZoom} from './world/camera.js?v=028';
+import {PointerControls} from './input/pointer.js?v=028';
 import {setupFullscreen} from './ui/fullscreen.js';
 const state=loadState(),canvas=document.getElementById('map'),renderer=new Renderer(canvas,state);
 const $=id=>document.getElementById(id),seeds=$('seeds');
 let timer;
+function updateZoomButtons(){
+ const min=minimumFarmZoom(renderer.width,renderer.height);
+ const max=maximumFarmZoom(renderer.width,renderer.height);
+ $('minus').disabled=renderer.scale<=min+.0001;
+ $('plus').disabled=renderer.scale>=max-.0001;
+}
 function update(){
  $('coins').textContent=state.coins.toLocaleString('pt-BR');
  $('level').textContent=levelOf(state.xp).level;
@@ -23,14 +30,15 @@ setupFullscreen({
  root:document.getElementById('game'),
  button:$('fullscreen'),
  onFeedback:notify,
- onResize:()=>renderer.resize()
+ onResize:()=>{renderer.resize();updateZoomButtons();}
 });
-new PointerControls(canvas,renderer,(r,c)=>{const res=interact(state,r,c);if(res.changed)update();notify(res.message);});
-$('plus').onclick=()=>renderer.zoom(1.14);
-$('minus').onclick=()=>renderer.zoom(1/1.14);
-$('center').onclick=()=>renderer.recenter();
-addEventListener('resize',()=>renderer.resize());
+new PointerControls(canvas,renderer,(r,c)=>{const res=interact(state,r,c);if(res.changed)update();notify(res.message);},updateZoomButtons);
+$('plus').onclick=()=>{renderer.zoom(1.14);updateZoomButtons();};
+$('minus').onclick=()=>{renderer.zoom(1/1.14);updateZoomButtons();};
+$('center').onclick=()=>{renderer.recenter();updateZoomButtons();};
+addEventListener('resize',()=>{renderer.resize();updateZoomButtons();});
 update();
+updateZoomButtons();
 let last=0;
 function frame(t){requestAnimationFrame(frame);if(t-last<33)return;last=t;renderer.render(t);}
 requestAnimationFrame(frame);
