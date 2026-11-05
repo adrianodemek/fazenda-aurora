@@ -2,7 +2,7 @@
 // pela câmera: evita redesenhar cada losango em todos os frames no celular.
 import {MAP_SIZE, TILE_W, TILE_H, PLOTS} from '../../config/gameConfig.js';
 import {drawPond} from './pond.js?v=025';
-import {FARM_OBJECTS,FARM_PATH} from '../layout.js?v=028';
+import {FARM_OBJECTS,FARM_PATH} from '../layout.js?v=029';
 
 const H_W = TILE_W / 2;
 const H_H = TILE_H / 2;
@@ -174,6 +174,11 @@ export function createTerrainLayer() {
     if(PLOTS.has(r+':'+c)){const p=tileAt(r,c);plot(ctx,p.x,p.y,r,c);}
    }
 
-  drawPond(ctx,FARM_OBJECTS.pond.x,FARM_OBJECTS.pond.y);
+  // Lago maior, parcialmente entrando pelo alto esquerdo como no original.
+  ctx.save();
+  ctx.translate(FARM_OBJECTS.pond.x,FARM_OBJECTS.pond.y);
+  ctx.scale(1.42,1.30);
+  drawPond(ctx,0,0);
+  ctx.restore();
   return {canvas,offsetX:-offsetX,offsetY:-offsetY};
 }
