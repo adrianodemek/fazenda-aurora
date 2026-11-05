@@ -43,6 +43,10 @@ const run=()=>{
    ]){
     const response=await fetch(asset,{cache:'no-store'});
     if(!response.ok)throw Error('sprite não carregou: '+asset);
+    const image=new Image();
+    image.src=new URL(asset,location.href).href;
+    await image.decode();
+    if(!image.naturalWidth)throw Error('imagem inválida: '+asset);
    }
    if(!minus.disabled)throw Error('afastamento inicial está liberado');
    plus.click();
