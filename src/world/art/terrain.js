@@ -2,10 +2,11 @@
 // pela câmera: evita redesenhar cada losango em todos os frames no celular.
 import {MAP_SIZE, TILE_W, TILE_H, PLOTS} from '../../config/gameConfig.js';
 import {drawPond} from './pond.js?v=025';
+import {FARM_OBJECTS,FARM_PATH} from '../layout.js?v=028';
 
 const H_W = TILE_W / 2;
 const H_H = TILE_H / 2;
-const GRASS = ['#a6d477', '#a6d579', '#a9d77d', '#a5d478', '#abd880'];
+const GRASS = ['#a9d17a', '#a8d27b', '#aad17c', '#a8d17b', '#a9d27b'];
 const SOIL = ['#bc8050', '#bb7c4d', '#b7824e'];
 
 function path(ctx, coords) {
@@ -113,36 +114,66 @@ function pathway(ctx,x,y){
 function tileAt(r,c){
   return {x:(c-r)*H_W,y:(c+r)*H_H};
 }
+function drawSoftPath(ctx){
+ // Caminho não clicável, fica atrás das plantações e das construções.
+ const p=FARM_PATH;
+ ctx.save();
+ ctx.lineCap='round';ctx.lineJoin='round';
+ ctx.beginPath();ctx.moveTo(p[0].x,p[0].y);
+ for(let i=1;i<p.length-1;i++){
+  const midX=(p[i].x+p[i+1].x)/2;
+  const midY=(p[i].y+p[i+1].y)/2;
+  ctx.quadraticCurveTo(p[i].x,p[i].y,midX,midY);
+ }
+ ctx.lineTo(p[p.length-1].x,p[p.length-1].y);
+ ctx.strokeStyle='#a27d4e33';ctx.lineWidth=64;ctx.stroke();
+ ctx.strokeStyle='#d4b987';ctx.lineWidth=55;ctx.stroke();
+ ctx.strokeStyle='#dfc99c';ctx.lineWidth=35;ctx.stroke();
+ ctx.restore();
+}
+
 export function createTerrainLayer() {
+  // A grama continua para fora da antiga ilha. Mesmo arrastando e
+  // aproximando, nenhuma borda vazia é exposta.
   const canvas=document.createElement('canvas');
-  canvas.width=(MAP_SIZE+1)*TILE_W;
-  canvas.height=(MAP_SIZE+2)*TILE_H;
+  canvas.width=2000;
+  canvas.height=1450;
   const ctx=canvas.getContext('2d');
-  if (!ctx) throw new Error('Canvas 2D indisponível para o terreno');
-  const offsetX=canvas.width/2, offsetY=TILE_H;
+  if(!ctx)throw new Error('Canvas 2D indisponível para o terreno');
+  const offsetX=1000,offsetY=350;
   ctx.translate(offsetX,offsetY);
-
-  const a=tileAt(0,0),b=tileAt(0,MAP_SIZE-1);
-  const d=tileAt(MAP_SIZE-1,MAP_SIZE-1),e=tileAt(MAP_SIZE-1,0);
-  // Laterais da ilha conferem volume sem alterar o grid lógico.
-  poly(ctx,[[a.x,a.y-H_H],[b.x+H_W,b.y],[d.x,d.y+H_H+15],
-    [e.x-H_W,e.y+15]],'#69995b');
-  poly(ctx,[[e.x-H_W,e.y],[d.x,d.y+H_H],[d.x,d.y+H_H+15],
-    [e.x-H_W,e.y+15]],'#608f54');
-
-  for(let depth=0;depth<MAP_SIZE*2-1;depth++){
-    for(let r=Math.max(0,depth-MAP_SIZE+1);r<=Math.min(depth,MAP_SIZE-1);r++){
-      const c=depth-r,p=tileAt(r,c),isPlot=PLOTS.has(r+':'+c);
-      const road=!isPlot&&(
-        (r===3&&c===8)||(r===4&&c===9)||(r===4&&c===10)||
-        (r===7&&c===11)||(r===9&&c===11)
-      );
-      if (isPlot) plot(ctx,p.x,p.y,r,c);
-      else if (road) pathway(ctx,p.x,p.y);
-      else meadow(ctx,p.x,p.y,r,c);
+  ctx.fillStyle='#a9d17b';
+  ctx.fillRect(-offsetX,-offsetY,canvas.width,canvas.height);
+  // Textura gramada determinística: cache único, não por frame.
+  for(let i=0;i<1800;i++){
+    const x=-990+randomish(i,5,10)*1980;
+    const y=-345+randomish(i,3,15)*1435;
+    const h=2+randomish(i,13,8)*6;
+    line(ctx,x,y,x-2,y-h,'#78b05a90',1);
+    line(ctx,x,y,x+1.8,y-h*.78,'#88bb66b0',1);
+    if(i%39===0){
+      oval(ctx,x,y-4,3,2.3,i%2?'#fcf8ce':'#f6d8c6');
+      oval(ctx,x+.4,y-4,1,1,'#e3c467');
     }
   }
-  // Lago ornamental desenhado na camada do terreno, fora dos canteiros.
-  drawPond(ctx,175,145);
+
+  // Desenha grama e detalhes de todos os tiles, mas SEM borda de ilha.
+  for(let depth=0;depth<MAP_SIZE*2-1;depth++)
+   for(let r=Math.max(0,depth-MAP_SIZE+1);r<=Math.min(depth,MAP_SIZE-1);r++){
+    const c=depth-r,p=tileAt(r,c);
+    if(!PLOTS.has(r+':'+c))meadow(ctx,p.x,p.y,r,c);
+   }
+
+  drawSoftPath(ctx);
+
+  // Canteiros são as únicas células com relevo e continuam
+  // exatamente nos mesmos endereços (r,c) do salvamento antigo.
+  for(let depth=0;depth<MAP_SIZE*2-1;depth++)
+   for(let r=Math.max(0,depth-MAP_SIZE+1);r<=Math.min(depth,MAP_SIZE-1);r++){
+    const c=depth-r;
+    if(PLOTS.has(r+':'+c)){const p=tileAt(r,c);plot(ctx,p.x,p.y,r,c);}
+   }
+
+  drawPond(ctx,FARM_OBJECTS.pond.x,FARM_OBJECTS.pond.y);
   return {canvas,offsetX:-offsetX,offsetY:-offsetY};
 }
