@@ -1,7 +1,7 @@
 import {CROPS} from './config/gameConfig.js';
 import {loadState,saveState,interact,levelOf} from './systems/farm.js?v=027';
-import {Renderer} from './world/renderer.js?v=028';
-import {minimumFarmZoom,maximumFarmZoom} from './world/camera.js?v=028';
+import {Renderer} from './world/renderer.js?v=029';
+import {minimumFarmZoom,maximumFarmZoom} from './world/camera.js?v=029';
 import {PointerControls} from './input/pointer.js?v=028';
 import {setupFullscreen} from './ui/fullscreen.js';
 const state=loadState(),canvas=document.getElementById('map'),renderer=new Renderer(canvas,state);
