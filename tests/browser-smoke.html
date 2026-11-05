@@ -15,8 +15,9 @@ const finish=(message,good)=>{
  document.title=good?'AURORA_BROWSER_PASS':'AURORA_BROWSER_FAIL';
 };
 const timeout=setTimeout(()=>finish('FALHA: tempo limite',false),7500);
-frame.addEventListener('load',()=>{
+const run=()=>{
  setTimeout(async()=>{
+  if(completed)return;
   try{
    const doc=frame.contentDocument;
    if(!doc)throw Error('iframe não acessível');
@@ -49,5 +50,7 @@ frame.addEventListener('load',()=>{
    finish('SMOKE_OK: cenário, sprites, câmera e zoom',true);
   }catch(error){finish('SMOKE_FAIL: '+error.message,false);}
  },1300);
-});
+};
+frame.addEventListener('load',run,{once:true});
+if(frame.contentDocument?.readyState==='complete')run();
 </script></body></html>
