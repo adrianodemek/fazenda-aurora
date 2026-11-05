@@ -88,3 +88,8 @@ button:focus-visible{outline:3px solid #f2c66f;outline-offset:2px}
  .rotate p{font-weight:600}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Zoom limitado ao enquadramento mobile. O botão de afastar desativa
+   ao atingir o tamanho mínimo, sem deixar bordas vazias do cenário. */
+.zoom button:disabled{opacity:.53;cursor:default;box-shadow:none}
+.zoom button:disabled:active{transform:none}
