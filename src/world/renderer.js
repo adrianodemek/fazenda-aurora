@@ -1,11 +1,12 @@
 import {MAP_SIZE,TILE_W,TILE_H,PLOTS} from '../config/gameConfig.js';
-import {createTerrainLayer} from './art/terrain.js?v=028';
-import {initialFarmView,minimumFarmZoom,maximumFarmZoom,constrainFarmCamera} from './camera.js?v=028';
-import {FARM_OBJECTS,SCENERY_TREES} from './layout.js?v=028';
+import {createTerrainLayer} from './art/terrain.js?v=029';
+import {initialFarmView,minimumFarmZoom,maximumFarmZoom,constrainFarmCamera} from './camera.js?v=029';
+import {FARM_OBJECTS,SCENERY_TREES} from './layout.js?v=029';
 import {loadFarmSprites,drawFarmSprite} from './art/sprites.js?v=026';
 import {drawCropIllustrated} from './art/crops.js?v=026';
 import {HeadquartersArt} from './art/headquarters.js?v=027';
 import {DoghouseArt} from './art/doghouse.js?v=028';
+import {AnimalPenArt} from './art/animalPen.js?v=029';
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const key=(r,c)=>r+':'+c;
 function polygon(ctx,p,fill,stroke){ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0],p[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
@@ -47,6 +48,7 @@ export class Renderer{
   this.sprites=loadFarmSprites();
   this.headquartersArt=new HeadquartersArt();
   this.doghouseArt=new DoghouseArt();
+  this.animalPenArt=new AnimalPenArt();
   this.resize();
  }
  resize(){
@@ -111,14 +113,15 @@ export class Renderer{
   ctx.save();ctx.translate(this.x,this.y);ctx.scale(this.scale,this.scale);
   // Cache do terreno estático: no frame desenhamos apenas uma imagem.
   ctx.drawImage(this.terrain.canvas,this.terrain.offsetX,this.terrain.offsetY);
-  // Composição da referência: lago no topo esquerdo (no terreno),
-  // horta inferior esquerda, cachorro no meio e sede à direita.
+  // Composição clássica: lago no canto esquerdo, horta grande embaixo,
+  // casinha do cachorro à esquerda, sede central e cercado à direita.
   const actors=SCENERY_TREES.map((p,i)=>({
    x:p.x,y:p.y,type:'tree',i
   }));
   actors.push(
    {...FARM_OBJECTS.headquarters,type:'house'},
-   {...FARM_OBJECTS.doghouse,type:'doghouse'}
+   {...FARM_OBJECTS.doghouse,type:'doghouse'},
+   {...FARM_OBJECTS.animalPen,type:'animalPen',y:FARM_OBJECTS.animalPen.y+FARM_OBJECTS.animalPen.height*.75,pen:FARM_OBJECTS.animalPen}
   );
   for(const [id,p] of Object.entries(this.state.plants)){
    if(!PLOTS.has(id))continue;
@@ -139,6 +142,8 @@ export class Renderer{
      ctx.save();ctx.translate(q.x,q.y);ctx.scale(1.32,1.32);
      house(ctx,0,0);ctx.restore();
     }
+   } else if(a.type==='animalPen'){
+    this.animalPenArt.draw(ctx,a.pen);
    } else if(a.type==='doghouse'){
     if(!this.doghouseArt.draw(ctx,q.x,q.y) &&
        !drawFarmSprite(ctx,this.sprites.barn,q.x-72,q.y-115,144,132)){
