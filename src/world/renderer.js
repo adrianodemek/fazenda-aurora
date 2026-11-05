@@ -1,9 +1,11 @@
-import {MAP_SIZE,TILE_W,TILE_H,PLOTS,TREES,CROPS} from '../config/gameConfig.js';
-import {createTerrainLayer} from './art/terrain.js?v=026';
-import {initialFarmView} from './camera.js?v=025';
+import {MAP_SIZE,TILE_W,TILE_H,PLOTS} from '../config/gameConfig.js';
+import {createTerrainLayer} from './art/terrain.js?v=028';
+import {initialFarmView,minimumFarmZoom,maximumFarmZoom,constrainFarmCamera} from './camera.js?v=028';
+import {FARM_OBJECTS,SCENERY_TREES} from './layout.js?v=028';
 import {loadFarmSprites,drawFarmSprite} from './art/sprites.js?v=026';
 import {drawCropIllustrated} from './art/crops.js?v=026';
 import {HeadquartersArt} from './art/headquarters.js?v=027';
+import {DoghouseArt} from './art/doghouse.js?v=028';
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const key=(r,c)=>r+':'+c;
 function polygon(ctx,p,fill,stroke){ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0],p[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
@@ -44,11 +46,14 @@ export class Renderer{
   this.terrain=createTerrainLayer();
   this.sprites=loadFarmSprites();
   this.headquartersArt=new HeadquartersArt();
+  this.doghouseArt=new DoghouseArt();
   this.resize();
  }
  resize(){
   const oldW=this.width,oldH=this.height;
   const focus=(oldW && this.manualView)?this.toWorld(oldW/2,oldH/2):null;
+  const relativeZoom=oldW && this.manualView
+   ? this.scale/minimumFarmZoom(oldW,oldH):1;
   const rect=this.canvas.getBoundingClientRect();
   const w=rect.width||innerWidth,h=rect.height||innerHeight;
   this.width=w;this.height=h;
@@ -56,14 +61,27 @@ export class Renderer{
   this.canvas.width=Math.round(w*this.dpr);
   this.canvas.height=Math.round(h*this.dpr);
   if(focus){
-   this.x=w/2-focus.x*this.scale;
-   this.y=h/2-focus.y*this.scale;
-  }else this.recenter();
+    this.scale=Math.min(maximumFarmZoom(w,h),
+      Math.max(minimumFarmZoom(w,h),relativeZoom*minimumFarmZoom(w,h)));
+    this.x=w/2-focus.x*this.scale;
+    this.y=h/2-focus.y*this.scale;
+    this.constrain();
+  } else this.recenter();
  }
  recenter(){
   const view=initialFarmView(this.width,this.height);
   this.scale=view.scale;this.x=view.x;this.y=view.y;
   this.manualView=false;
+ }
+ constrain(){
+  const view=constrainFarmCamera({
+   scale:this.scale,x:this.x,y:this.y
+  },this.width,this.height);
+  this.scale=view.scale;this.x=view.x;this.y=view.y;
+ }
+ pan(dx,dy){
+  this.x+=dx;this.y+=dy;
+  this.manualView=true;this.constrain();
  }
  tile(r,c){return {x:(c-r)*TILE_W/2,y:(c+r)*TILE_H/2};}
  toWorld(x,y){return {x:(x-this.x)/this.scale,y:(y-this.y)/this.scale};}
@@ -74,8 +92,16 @@ export class Renderer{
   const q=this.tile(r,c);return Math.abs(p.x-q.x)/(TILE_W/2)+Math.abs(p.y-q.y)/(TILE_H/2)<=1.02?{r,c}:null;
  }
  zoom(factor,x=this.width/2,y=this.height*.44){
-  const before=this.toWorld(x,y);this.scale=clamp(this.scale*factor,.28,1.8);this.x=x-before.x*this.scale;this.y=y-before.y*this.scale;
+  const before=this.toWorld(x,y);
+  const old=this.scale;
+  this.scale=Math.min(maximumFarmZoom(this.width,this.height),
+   Math.max(minimumFarmZoom(this.width,this.height),old*factor));
+  if(Math.abs(this.scale-old)<.000001)return false;
+  this.x=x-before.x*this.scale;
+  this.y=y-before.y*this.scale;
   this.manualView=true;
+  this.constrain();
+  return true;
  }
  render(t){
   const ctx=this.ctx,w=this.width,h=this.height;
@@ -85,22 +111,39 @@ export class Renderer{
   ctx.save();ctx.translate(this.x,this.y);ctx.scale(this.scale,this.scale);
   // Cache do terreno estático: no frame desenhamos apenas uma imagem.
   ctx.drawImage(this.terrain.canvas,this.terrain.offsetX,this.terrain.offsetY);
-  const actors=TREES.map(([r,c],i)=>({r,c,type:'tree',i}));
-  actors.push({r:3,c:9,type:'house'},{r:8,c:11,type:'barn'});
-  for(const [id,p] of Object.entries(this.state.plants)){if(PLOTS.has(id)){const [r,c]=id.split(':').map(Number);actors.push({r,c,type:'crop',p});}}
-  actors.sort((a,b)=>(a.r+a.c)-(b.r+b.c));
+  // Composição da referência: lago no topo esquerdo (no terreno),
+  // horta inferior esquerda, cachorro no meio e sede à direita.
+  const actors=SCENERY_TREES.map((p,i)=>({
+   x:p.x,y:p.y,type:'tree',i
+  }));
+  actors.push(
+   {...FARM_OBJECTS.headquarters,type:'house'},
+   {...FARM_OBJECTS.doghouse,type:'doghouse'}
+  );
+  for(const [id,p] of Object.entries(this.state.plants)){
+   if(!PLOTS.has(id))continue;
+   const [r,c]=id.split(':').map(Number);
+   const q=this.tile(r,c);
+   actors.push({...q,type:'crop',p});
+  }
+  // Ordenação de profundidade: o objeto mais próximo cobre o que está atrás.
+  actors.sort((a,b)=>a.y-b.y);
   for(const a of actors){
-   const q=this.tile(a.r,a.c);
+   const q=a;
    if(a.type==='tree'){
-    if(!drawFarmSprite(ctx,this.sprites.tree,q.x-61,q.y-134,122,146))tree(ctx,q.x,q.y,a.i,t);
+    if(!drawFarmSprite(ctx,this.sprites.tree,q.x-61,q.y-134,122,146))
+     tree(ctx,q.x,q.y,a.i,t);
    } else if(a.type==='house'){
     if(!this.headquartersArt.draw(ctx,this.state.headquartersLevel||1,q.x,q.y) &&
        !drawFarmSprite(ctx,this.sprites.house,q.x-120,q.y-200,240,225)){
-     ctx.save();ctx.translate(q.x,q.y);ctx.scale(1.32,1.32);house(ctx,0,0);ctx.restore();
+     ctx.save();ctx.translate(q.x,q.y);ctx.scale(1.32,1.32);
+     house(ctx,0,0);ctx.restore();
     }
-   } else if(a.type==='barn'){
-    if(!drawFarmSprite(ctx,this.sprites.barn,q.x-105,q.y-175,210,195)){
-     ctx.save();ctx.translate(q.x,q.y);ctx.scale(1.22,1.22);barn(ctx,0,0);ctx.restore();
+   } else if(a.type==='doghouse'){
+    if(!this.doghouseArt.draw(ctx,q.x,q.y) &&
+       !drawFarmSprite(ctx,this.sprites.barn,q.x-72,q.y-115,144,132)){
+     ctx.save();ctx.translate(q.x,q.y);ctx.scale(.82,.82);
+     barn(ctx,0,0);ctx.restore();
     }
    } else drawCropIllustrated(ctx,q.x,q.y,a.p,t);
   }
