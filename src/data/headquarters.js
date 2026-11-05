@@ -5,7 +5,9 @@ export const HEADQUARTERS = Object.freeze({
     level:1,
     name:'Sede Inicial',
     sprite:'../../public/assets/buildings/headquarters/level-01.webp?v=027',
-    row:3, col:9,
+    // Apenas a arte e dimensões variam nas futuras evoluções.
+    // Posicionamento único fica em src/world/layout.js.
+    positionKey:'headquarters',
     width:270, height:196,
     bottomOffset:27
   })
