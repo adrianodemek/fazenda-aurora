@@ -43,10 +43,13 @@ const run=()=>{
    ]){
     const response=await fetch(asset,{cache:'no-store'});
     if(!response.ok)throw Error('sprite não carregou: '+asset);
-    const image=new Image();
-    image.src=new URL(asset,location.href).href;
-    await image.decode();
-    if(!image.naturalWidth)throw Error('imagem inválida: '+asset);
+    const blob=await response.blob();
+    if(blob.size<100)throw Error('sprite vazio: '+asset);
+    if(asset.endsWith('.svg')){
+     const xml=new DOMParser().parseFromString(await blob.text(),'image/svg+xml');
+     if(xml.querySelector('parsererror') || !xml.querySelector('svg'))
+      throw Error('SVG inválido: '+asset);
+    }
    }
    if(!minus.disabled)throw Error('afastamento inicial está liberado');
    plus.click();
