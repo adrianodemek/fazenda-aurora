@@ -2,6 +2,16 @@
 
 Jogo de fazenda 2D isométrico inspirado na jogabilidade social clássica, com visual modernizado. **Mobile-first em landscape**, também compatível com PC.
 
+## V0.2.9 — visual clássico com cercado no canto direito
+- Enquadramento mais próximo no celular horizontal, com limite mínimo de zoom ajustado.
+- Sede inicial posicionada na parte superior central, com sprite de nível independente.
+- Casinha do cachorro e lago deslocados à esquerda; lago ligeiramente maior.
+- Curral ilustrado à direita, com cerca em camadas e vaca, ovelha e galinha em sprites próprios.
+- Animais são decorações temporárias: criação e alimentação serão mecânicas futuras.
+- Posições em `src/world/layout.js`; cercado em `src/world/art/animalPen.js`.
+- 30 terrenos, plantações, moedas, experiência e salvamento preservados.
+- Testes automatizados e verificação em navegador fazem parte da publicação.
+
 ## V0.2.8 — composição mobile conforme referência
 - Posição da sede, casinha do cachorro, lago e horta ajustada aos pontos de referência enviados.
 - Posições separadas em `src/world/layout.js`; tamanho da tela e enquadramento em `src/world/camera.js`.
