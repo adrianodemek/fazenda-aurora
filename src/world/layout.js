@@ -30,7 +30,7 @@ export const FARM_PATH=Object.freeze([
 // Metadados do curral: versões futuras poderão manter as cercas
 // e renderizar animais dinâmicos por outro sistema.
 export const PEN_ANIMAL_SPOTS=Object.freeze([
- Object.freeze({kind:'cow',x:.61,y:.45,width:.28,height:.37}),
- Object.freeze({kind:'sheep',x:.36,y:.49,width:.22,height:.29}),
- Object.freeze({kind:'hen',x:.72,y:.68,width:.12,height:.18})
+ Object.freeze({kind:'cow',x:.64,y:.73,width:.29,height:.37}),
+ Object.freeze({kind:'sheep',x:.34,y:.70,width:.23,height:.29}),
+ Object.freeze({kind:'hen',x:.77,y:.81,width:.12,height:.18})
 ]);
