@@ -1,12 +1,12 @@
 export class PointerControls{
- constructor(canvas,renderer,onTile){
-  this.canvas=canvas;this.renderer=renderer;this.onTile=onTile;
+ constructor(canvas,renderer,onTile,onCameraChange=()=>{}){
+  this.canvas=canvas;this.renderer=renderer;this.onTile=onTile;this.onCameraChange=onCameraChange;
   this.active=new Map();this.moved=false;this.start=null;this.pinch=0;
   canvas.addEventListener('pointerdown',e=>this.down(e));
   canvas.addEventListener('pointermove',e=>this.move(e));
   canvas.addEventListener('pointerup',e=>this.up(e));
   canvas.addEventListener('pointercancel',e=>this.up(e,true));
-  canvas.addEventListener('wheel',e=>{e.preventDefault();renderer.zoom(e.deltaY<0?1.1:1/1.1,e.clientX,e.clientY);},{passive:false});
+  canvas.addEventListener('wheel',e=>{e.preventDefault();renderer.zoom(e.deltaY<0?1.1:1/1.1,e.clientX,e.clientY);this.onCameraChange();},{passive:false});
  }
  distance(){const p=[...this.active.values()];return p.length<2?0:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);}
  down(e){this.canvas.setPointerCapture(e.pointerId);this.active.set(e.pointerId,{x:e.clientX,y:e.clientY});if(this.active.size===1){this.start={x:e.clientX,y:e.clientY};this.moved=false;}if(this.active.size===2){this.pinch=this.distance();this.moved=true;}}
@@ -15,10 +15,10 @@ export class PointerControls{
   const old=this.active.get(e.pointerId);this.active.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(this.active.size>=2){
    const pts=[...this.active.values()],d=this.distance();if(this.pinch)this.renderer.zoom(d/this.pinch,(pts[0].x+pts[1].x)/2,(pts[0].y+pts[1].y)/2);
-   this.pinch=d;this.moved=true;return;
+   this.pinch=d;this.moved=true;this.onCameraChange();return;
   }
   if(this.start&&Math.hypot(e.clientX-this.start.x,e.clientY-this.start.y)>7)this.moved=true;
-  if(this.moved){this.renderer.x+=e.clientX-old.x;this.renderer.y+=e.clientY-old.y;this.renderer.manualView=true;}
+  if(this.moved){this.renderer.pan(e.clientX-old.x,e.clientY-old.y);this.onCameraChange();}
   else this.renderer.hover=this.renderer.hit(e.clientX,e.clientY);
  }
  up(e,cancelled=false){
