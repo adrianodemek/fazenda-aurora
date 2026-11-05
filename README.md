@@ -2,6 +2,15 @@
 
 Jogo de fazenda 2D isométrico inspirado na jogabilidade social clássica, com visual modernizado. **Mobile-first em landscape**, também compatível com PC.
 
+## V0.2.8 — composição mobile conforme referência
+- Posição da sede, casinha do cachorro, lago e horta ajustada aos pontos de referência enviados.
+- Posições separadas em `src/world/layout.js`; tamanho da tela e enquadramento em `src/world/camera.js`.
+- Casinha do cachorro ganhou sprite independente em `public/assets/buildings/doghouse/level-01.svg`.
+- Gramado contínuo substitui o chão em ilha com bordas: laterais não ficam vazias.
+- Botão de afastar limita o zoom à escala inicial; arrasto e pinça também respeitam limites de mundo.
+- A referência descreve posições aproximadas, não substitui a cena por uma imagem estática.
+- 30 canteiros, cultivos, moedas, experiência e nível da sede continuam preservados.
+
 ## V0.2.7 — Sede Inicial nostálgica
 - Novo sprite da Sede Inicial em `public/assets/buildings/headquarters/level-01.webp` (WebP com transparência, otimizado para mobile).
 - A sede é controlada por `headquartersLevel`, separado do nível de experiência.
