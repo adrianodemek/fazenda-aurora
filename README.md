@@ -2,6 +2,15 @@
 
 Jogo de fazenda 2D isométrico inspirado na jogabilidade social clássica, com visual modernizado. **Mobile-first em landscape**, também compatível com PC.
 
+## V0.3.3 — composição visual baseada na foto-matriz do Colheita Feliz
+- **Somente a horta** foi deslocada para a parte inferior esquerda e ampliada, ficando abaixo da casinha do cachorro e próxima ao caminho.
+- Grade de 28 canteiros preservada, inclusive seis livres e 22 com mato. Não houve troca de IDs nem reset das plantas e moedas.
+- Terra, mato, plantações, contorno de seleção e toque aplicam a MESMA transformação isométrica 2D (1,45×), evitando desenhos desconectados.
+- A antiga posição dos canteiros agora é gramado; não existe uma segunda horta invisível ou clicável.
+- Posição e escala centralizadas em `src/world/plotLayout.js`. Em futuras alterações basta editar o layout.
+- Sede, lago e cercado continuam em suas posições, sem alteração das mecânicas.
+- Testes de hitbox e smoke test mobile verificam a localização dos terrenos de forma determinística.
+
 ## V0.3.2 — horta com encaixe isométrico contínuo
 - Reconstruímos a horta como **4 × 7 = 28** losangos, sem lacunas ou sobreposições.
 - O sprite aprovado de mato é recortado para remover a margem transparente (fonte 140×140, recorte y=30–140), e então encaixado precisamente em 100×54 unidades do mundo.

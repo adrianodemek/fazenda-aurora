@@ -6,6 +6,7 @@
 <script type="module">
 import {initialFarmView,minimumFarmZoom} from '../src/world/camera.js';
 import {FARM_OBJECTS} from '../src/world/layout.js';
+import {plotTileWorld,PLOT_WORLD_CENTER,PLOT_ART_SCALE,hitFarmPlotWorld} from '../src/world/plotLayout.js';
 import {FREE_PLOTS,LOCKED_PLOTS,PLOT_VISUAL_ORDER} from '../src/config/gameConfig.js';
 const frame=document.getElementById('farm');
 const result=document.getElementById('result');
@@ -47,6 +48,16 @@ const run=()=>{
     throw Error('número de parcelas incorreto');
    if(JSON.stringify([...FREE_PLOTS])!==JSON.stringify(PLOT_VISUAL_ORDER.slice(0,6)))
     throw Error('seis terrenos iniciais não são os primeiros da horta');
+   // Compara o enquadramento mobile com a foto-matriz: a horta
+   // deve ocupar a parte inferior esquerda, abaixo da casinha.
+   const field=plotTileWorld(6,4);
+   const frameX=initial.x+field.x*initial.scale;
+   const frameY=initial.y+field.y*initial.scale;
+   if(frameX<80||frameX>440)throw Error('horta fora da esquerda: '+Math.round(frameX));
+   if(frameY<230||frameY>385)throw Error('horta fora da parte inferior: '+Math.round(frameY));
+   if(PLOT_ART_SCALE<1.3 || PLOT_WORLD_CENTER.y<390)throw Error('horta ainda pequena/alta');
+   if(!hitFarmPlotWorld(field.x,field.y))throw Error('canteiro movido não é clicável');
+   if(hitFarmPlotWorld(-150,175))throw Error('canteiro fantasma na posição antiga');
    if(!minus.disabled)throw Error('afastamento inicial está liberado');
    plus.click();
    if(minus.disabled)throw Error('zoom + não ativou o -');
