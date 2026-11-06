@@ -1,6 +1,6 @@
 // Terreno estático da fazenda. A camada é desenhada uma vez e reutilizada
 // pela câmera: evita redesenhar cada losango em todos os frames no celular.
-import {MAP_SIZE, TILE_W, TILE_H, PLOTS} from '../../config/gameConfig.js';
+import {MAP_SIZE, TILE_W, TILE_H, PLOTS, FREE_PLOTS} from '../../config/gameConfig.js';
 import {drawPond} from './pond.js?v=025';
 import {FARM_OBJECTS,FARM_PATH} from '../layout.js?v=029';
 
@@ -132,7 +132,19 @@ function drawSoftPath(ctx){
  ctx.restore();
 }
 
-export function createTerrainLayer() {
+// A grama pertence à camada do chão. Nunca deve ser desenhada por cima
+// de um canteiro de terra ou de uma planta.
+function blockedPlot(ctx,x,y,image){
+ if(image?.complete && image.naturalWidth>0){
+  // Sprite enquadrado em um único tile (100×50), com relevo discreto.
+  // Não deve alcançar o tile acima ou abaixo.
+  ctx.drawImage(image,x-TILE_W/2,y-TILE_H/2-5,TILE_W,TILE_H+5);
+ }else{
+  poly(ctx,diamond(x,y,48,24),'#91c84e','#78aa41');
+ }
+}
+
+export function createTerrainLayer(blockedImage=null) {
   // A grama continua para fora da antiga ilha. Mesmo arrastando e
   // aproximando, nenhuma borda vazia é exposta.
   const canvas=document.createElement('canvas');
@@ -171,7 +183,12 @@ export function createTerrainLayer() {
   for(let depth=0;depth<MAP_SIZE*2-1;depth++)
    for(let r=Math.max(0,depth-MAP_SIZE+1);r<=Math.min(depth,MAP_SIZE-1);r++){
     const c=depth-r;
-    if(PLOTS.has(r+':'+c)){const p=tileAt(r,c);plot(ctx,p.x,p.y,r,c);}
+    const id=r+':'+c;
+    if(PLOTS.has(id)){
+     const p=tileAt(r,c);
+     if(FREE_PLOTS.has(id))plot(ctx,p.x,p.y,r,c);
+     else blockedPlot(ctx,p.x,p.y,blockedImage);
+    }
    }
 
   // Lago maior, parcialmente entrando pelo alto esquerdo como no original.

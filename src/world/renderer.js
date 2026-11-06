@@ -1,5 +1,5 @@
-import {MAP_SIZE,TILE_W,TILE_H,PLOTS,LEGACY_PLOTS,LOCKED_PLOTS} from '../config/gameConfig.js';
-import {createTerrainLayer} from './art/terrain.js?v=029';
+import {MAP_SIZE,TILE_W,TILE_H,PLOTS} from '../config/gameConfig.js';
+import {createTerrainLayer} from './art/terrain.js?v=031';
 import {initialFarmView,minimumFarmZoom,maximumFarmZoom,constrainFarmCamera} from './camera.js?v=029';
 import {FARM_OBJECTS,SCENERY_TREES} from './layout.js?v=029';
 import {loadFarmSprites,drawFarmSprite} from './art/sprites.js?v=026';
@@ -7,7 +7,6 @@ import {drawCropIllustrated} from './art/crops.js?v=026';
 import {HeadquartersArt} from './art/headquarters.js?v=027';
 import {DoghouseArt} from './art/doghouse.js?v=028';
 import {AnimalPenArt} from './art/animalPen.js?v=029';
-import {isPlotUnlocked} from '../systems/farm.js?v=030';
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const key=(r,c)=>r+':'+c;
 function polygon(ctx,p,fill,stroke){ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0],p[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
@@ -46,16 +45,21 @@ export class Renderer{
   this.canvas=canvas;this.ctx=canvas.getContext('2d');this.state=state;
   this.scale=.65;this.x=0;this.y=0;this.hover=null;this.width=0;this.height=0;
   this.terrain=createTerrainLayer();
+  // Recria a camada estática apenas quando o sprite de grama termina
+  // de carregar. Nada é sobreposto aos cultivos durante os frames.
+  this.blockedSprite=null;
+  if(typeof Image!=='undefined'){
+   const image=new Image();
+   image.decoding='async';
+   image.onload=()=>{this.terrain=createTerrainLayer(image);};
+   image.src=new URL('../../public/assets/plots/grass-blocked-01.webp?v=031',import.meta.url).href;
+   this.blockedSprite=image;
+   if(image.complete&&image.naturalWidth>0)this.terrain=createTerrainLayer(image);
+  }
   this.sprites=loadFarmSprites();
   this.headquartersArt=new HeadquartersArt();
   this.doghouseArt=new DoghouseArt();
   this.animalPenArt=new AnimalPenArt();
-  this.blockedSprite=null;
-  if(typeof Image!=='undefined'){
-   this.blockedSprite=new Image();
-   this.blockedSprite.decoding='async';
-   this.blockedSprite.src=new URL('../../public/assets/plots/grass-blocked-01.webp?v=030',import.meta.url).href;
-  }
   this.resize();
  }
  resize(){
@@ -130,14 +134,8 @@ export class Renderer{
    {...FARM_OBJECTS.doghouse,type:'doghouse'},
    {...FARM_OBJECTS.animalPen,type:'animalPen',y:FARM_OBJECTS.animalPen.y+FARM_OBJECTS.animalPen.height*.75,pen:FARM_OBJECTS.animalPen}
   );
-  for(const id of LOCKED_PLOTS){
-   if(isPlotUnlocked(this.state,id)||this.state.plants[id])continue;
-   const [r,c]=id.split(':').map(Number);
-   const q=this.tile(r,c);
-   actors.push({...q,type:'blocked'});
-  }
   for(const [id,p] of Object.entries(this.state.plants)){
-   if(!LEGACY_PLOTS.has(id))continue;
+   if(!PLOTS.has(id))continue;
    const [r,c]=id.split(':').map(Number);
    const q=this.tile(r,c);
    actors.push({...q,type:'crop',p});
@@ -163,9 +161,6 @@ export class Renderer{
      ctx.save();ctx.translate(q.x,q.y);ctx.scale(.82,.82);
      barn(ctx,0,0);ctx.restore();
     }
-   } else if(a.type==='blocked'){
-    if(!drawFarmSprite(ctx,this.blockedSprite,q.x-50,q.y-69,100,92))
-     diamond(ctx,q.x,q.y,'#74b74a','#528e39');
    } else drawCropIllustrated(ctx,q.x,q.y,a.p,t);
   }
   if(this.hover&&PLOTS.has(key(this.hover.r,this.hover.c))){const q=this.tile(this.hover.r,this.hover.c);ctx.strokeStyle='#fff2a4';ctx.lineWidth=3;diamond(ctx,q.x,q.y,'#fff7a322','#fff2a4');}

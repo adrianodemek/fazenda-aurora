@@ -1,6 +1,6 @@
-import {CROPS,PLOTS,FREE_PLOTS,LEGACY_PLOTS,SAVE_KEY} from '../config/gameConfig.js';
+import {CROPS,PLOTS,FREE_PLOTS,PLOT_LAYOUT_VERSION,SAVE_KEY} from '../config/gameConfig.js';
 import {normalizeHeadquartersLevel} from '../data/headquarters.js';
-export function freshState(){return {coins:80,xp:0,selectedSeed:'wheat',plants:{},harvests:0,headquartersLevel:1,unlockedPlots:[]};}
+export function freshState(){return {coins:80,xp:0,selectedSeed:'wheat',plants:{},harvests:0,headquartersLevel:1,unlockedPlots:[],plotLayoutVersion:PLOT_LAYOUT_VERSION};}
 export function isPlotUnlocked(state,key){return FREE_PLOTS.has(key) || (Array.isArray(state.unlockedPlots)&&state.unlockedPlots.includes(key));}
 export function loadState(){
  const initial=freshState();
@@ -11,11 +11,17 @@ export function loadState(){
   if(Number.isFinite(raw.xp))initial.xp=Math.max(0,Math.floor(raw.xp));
   if(Number.isFinite(raw.harvests))initial.harvests=Math.max(0,Math.floor(raw.harvests));
   initial.headquartersLevel=normalizeHeadquartersLevel(raw.headquartersLevel);
-  if(Array.isArray(raw.unlockedPlots))initial.unlockedPlots=[...new Set(raw.unlockedPlots.filter(key=>typeof key==='string'&&PLOTS.has(key)&&!FREE_PLOTS.has(key)))];
+  // A nova horta começa sem plantações nem desbloqueios antigos.
+  // Moedas, experiência, colheitas e sede permanecem.
+  const migrated=raw.plotLayoutVersion!==PLOT_LAYOUT_VERSION;
+  if(!migrated && Array.isArray(raw.unlockedPlots))
+   initial.unlockedPlots=[...new Set(raw.unlockedPlots.filter(key=>typeof key==='string'&&PLOTS.has(key)&&!FREE_PLOTS.has(key)))];
   if(CROPS[raw.selectedSeed])initial.selectedSeed=raw.selectedSeed;
-  if(raw.plants&&typeof raw.plants==='object')
+  if(!migrated && raw.plants && typeof raw.plants==='object')
    for(const [key,p] of Object.entries(raw.plants))
-    if(LEGACY_PLOTS.has(key)&&p&&CROPS[p.seed]&&Number.isFinite(p.at))initial.plants[key]={seed:p.seed,at:p.at};
+    if(PLOTS.has(key)&&isPlotUnlocked(initial,key)&&p&&CROPS[p.seed]&&Number.isFinite(p.at))
+     initial.plants[key]={seed:p.seed,at:p.at};
+  if(migrated)saveState(initial);
  } catch { /* navegador pode bloquear armazenamento */ }
  return initial;
 }
@@ -27,8 +33,8 @@ export function levelOf(xp){
 }
 export function interact(state,row,col,now=Date.now()){
  const key=row+':'+col;
- if(!PLOTS.has(key) && !(LEGACY_PLOTS.has(key)&&state.plants[key]))
-  return {changed:false,message:'Selecione um canteiro da horta 🌱'};
+ if(!PLOTS.has(key))return {changed:false,message:'Selecione um canteiro da horta 🌱'};
+ if(!isPlotUnlocked(state,key))return {changed:false,message:'Terreno com mato bloqueado — expansão em breve 🔒'};
  const p=state.plants[key];
  if(p){
   const item=CROPS[p.seed],elapsed=now-p.at;
@@ -37,7 +43,6 @@ export function interact(state,row,col,now=Date.now()){
   delete state.plants[key];saveState(state);
   return {changed:true,message:item.name+' colhido! +'+item.sell+' moedas 🪙'};
  }
- if(!PLOTS.has(key)||!isPlotUnlocked(state,key))return {changed:false,message:'Terreno com mato bloqueado — expansão em breve 🔒'};
  const seed=CROPS[state.selectedSeed];
  if(state.coins<seed.cost)return {changed:false,message:'Moedas insuficientes'};
  state.coins-=seed.cost;state.plants[key]={seed:state.selectedSeed,at:now};
