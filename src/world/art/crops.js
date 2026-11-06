@@ -1,6 +1,6 @@
 // Cultivos ilustrados em Canvas, separados da lógica de plantio.
 // Valores em unidades de mundo (cada canteiro mantém 100 x 50).
-import {CROPS} from '../../config/gameConfig.js';
+import {CROPS} from '../../config/gameConfig.js?v=032';
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 function leaf(ctx,x,y,dx,dy,len,width,fill,stroke){
  ctx.beginPath();ctx.moveTo(x,y);

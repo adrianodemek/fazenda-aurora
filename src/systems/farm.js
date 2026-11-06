@@ -1,4 +1,4 @@
-import {CROPS,PLOTS,FREE_PLOTS,PLOT_LAYOUT_VERSION,SAVE_KEY} from '../config/gameConfig.js';
+import {CROPS,PLOTS,FREE_PLOTS,PLOT_LAYOUT_VERSION,SAVE_KEY} from '../config/gameConfig.js?v=032';
 import {normalizeHeadquartersLevel} from '../data/headquarters.js';
 export function freshState(){return {coins:80,xp:0,selectedSeed:'wheat',plants:{},harvests:0,headquartersLevel:1,unlockedPlots:[],plotLayoutVersion:PLOT_LAYOUT_VERSION};}
 export function isPlotUnlocked(state,key){return FREE_PLOTS.has(key) || (Array.isArray(state.unlockedPlots)&&state.unlockedPlots.includes(key));}

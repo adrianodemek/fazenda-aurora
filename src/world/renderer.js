@@ -1,4 +1,4 @@
-import {MAP_SIZE,TILE_W,TILE_H,PLOTS} from '../config/gameConfig.js';
+import {MAP_SIZE,TILE_W,TILE_H,PLOTS} from '../config/gameConfig.js?v=032';
 import {createTerrainLayer} from './art/terrain.js?v=032';
 import {initialFarmView,minimumFarmZoom,maximumFarmZoom,constrainFarmCamera} from './camera.js?v=029';
 import {FARM_OBJECTS,SCENERY_TREES} from './layout.js?v=029';

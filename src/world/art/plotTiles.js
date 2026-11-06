@@ -1,6 +1,6 @@
 // O WebP aprovado mede 140×140, mas seu losango começa em y≈33.
 // Recortamos a margem transparente antes de desenhar no losango 100×50.
-import {TILE_W,TILE_H} from '../../config/gameConfig.js';
+import {TILE_W,TILE_H} from '../../config/gameConfig.js?v=032';
 export const BLOCKED_SPRITE_CROP=Object.freeze({sx:0,sy:30,sw:140,sh:110});
 export const BLOCKED_TILE_DEST=Object.freeze({
  offsetX:-TILE_W/2,offsetY:-TILE_H/2-2,width:TILE_W,height:TILE_H+4

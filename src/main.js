@@ -1,4 +1,4 @@
-import {CROPS} from './config/gameConfig.js';
+import {CROPS} from './config/gameConfig.js?v=032';
 import {loadState,saveState,interact,levelOf} from './systems/farm.js?v=032';
 import {Renderer} from './world/renderer.js?v=032';
 import {minimumFarmZoom,maximumFarmZoom} from './world/camera.js?v=029';
