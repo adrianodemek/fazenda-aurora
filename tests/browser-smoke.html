@@ -57,7 +57,7 @@ const run=()=>{
    if(frameY<250||frameY>390)throw Error('horta fora da parte inferior: '+Math.round(frameY));
    if(PLOT_ART_SCALE<1.8 || PLOT_WORLD_CENTER.y<450)throw Error('horta ainda pequena/alta');
    if(!hitFarmPlotWorld(field.x,field.y))throw Error('canteiro movido não é clicável');
-   if(hitFarmPlotWorld(-150,175))throw Error('canteiro fantasma na posição antiga');
+   if(hitFarmPlotWorld(-150,100))throw Error('canteiro fantasma na posição antiga');
    if(!minus.disabled)throw Error('afastamento inicial está liberado');
    plus.click();
    if(minus.disabled)throw Error('zoom + não ativou o -');

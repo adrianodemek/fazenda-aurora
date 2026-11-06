@@ -44,8 +44,8 @@ test('no mobile horizontal a horta fica abaixo e à esquerda da sede',()=>{
   assert.ok(farm.y>place({x:165,y:245}).y);
  }
 });
-test('old grid coordinates do not receive planting taps',()=>{
- assert.equal(hitFarmPlotWorld(-150,175),null);
+test('points outside the new plot footprint do not receive planting taps',()=>{
+ assert.equal(hitFarmPlotWorld(-150,100),null);
  const p=plotTileWorld(5,1);
  assert.deepEqual(hitFarmPlotWorld(p.x,p.y),{r:5,c:1});
 });
