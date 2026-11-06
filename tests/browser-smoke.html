@@ -53,9 +53,9 @@ const run=()=>{
    const field=plotTileWorld(6,4);
    const frameX=initial.x+field.x*initial.scale;
    const frameY=initial.y+field.y*initial.scale;
-   if(frameX<80||frameX>440)throw Error('horta fora da esquerda: '+Math.round(frameX));
-   if(frameY<230||frameY>385)throw Error('horta fora da parte inferior: '+Math.round(frameY));
-   if(PLOT_ART_SCALE<1.3 || PLOT_WORLD_CENTER.y<390)throw Error('horta ainda pequena/alta');
+   if(frameX<150||frameX>470)throw Error('horta fora da esquerda: '+Math.round(frameX));
+   if(frameY<250||frameY>390)throw Error('horta fora da parte inferior: '+Math.round(frameY));
+   if(PLOT_ART_SCALE<1.8 || PLOT_WORLD_CENTER.y<450)throw Error('horta ainda pequena/alta');
    if(!hitFarmPlotWorld(field.x,field.y))throw Error('canteiro movido não é clicável');
    if(hitFarmPlotWorld(-150,175))throw Error('canteiro fantasma na posição antiga');
    if(!minus.disabled)throw Error('afastamento inicial está liberado');

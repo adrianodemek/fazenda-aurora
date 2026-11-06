@@ -20,9 +20,9 @@ test('fullscreen usa a mesma posição dos botões do zoom, sem posição fixa',
  assert.doesNotMatch(controls,/position:fixed/);
 });
 test('versão e assets sem cache antigo',()=>{
- assert.match(html,/V0\.3\.3/);
- assert.match(html,/game\.css\?v=033/);
- assert.match(html,/main\.js\?v=033/);
+ assert.match(html,/V0\.3\.4/);
+ assert.match(html,/game\.css\?v=034/);
+ assert.match(html,/main\.js\?v=034/);
 });
 test('interface enxuta e acessível',()=>{
  assert.match(controls,/aria-label="Entrar em tela cheia"/);

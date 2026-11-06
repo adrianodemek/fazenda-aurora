@@ -35,6 +35,6 @@ test('sprite de grama recortado encaixa no footprint 100x50',()=>{
 test('seis primeiros livres fazem um grupo compacto na parte mais alta',()=>{
  assert.equal(FREE_PLOTS.size,6);
  const pts=[...FREE_PLOTS].map(coord);
- assert.equal(Math.max(...pts.map(p=>p.y))-Math.min(...pts.map(p=>p.y)),50);
- assert.equal(PLOT_LAYOUT_VERSION,32);
+ assert.equal(Math.max(...pts.map(p=>p.y))-Math.min(...pts.map(p=>p.y)),75);
+ assert.equal(PLOT_LAYOUT_VERSION,33);
 });

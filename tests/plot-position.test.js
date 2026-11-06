@@ -9,8 +9,8 @@ test('28 tiles preservados e deslocados em conjunto, sem mudar o salvamento',()=
  assert.equal(PLOTS.size,28);
  assert.equal(FREE_PLOTS.size,6);
  assert.equal(LOCKED_PLOTS.size,22);
- assert.equal(PLOT_LAYOUT_VERSION,32);
- assert.equal(PLOT_ART_SCALE,1.45);
+ assert.equal(PLOT_LAYOUT_VERSION,33);
+ assert.equal(PLOT_ART_SCALE,1.85);
  for(const id of PLOTS){
   const [r,c]=id.split(':').map(Number),actual=plotTileWorld(r,c);
   assert.notDeepEqual(actual,baseTileWorld(r,c));
@@ -40,7 +40,7 @@ test('no mobile horizontal a horta fica abaixo e à esquerda da sede',()=>{
   const place=p=>({x:v.x+p.x*v.scale,y:v.y+p.y*v.scale});
   const farm=place(PLOT_WORLD_CENTER);
   assert.ok(farm.x>0&&farm.x<w*.45);
-  assert.ok(farm.y>h*.65&&farm.y<h*.95);
+  assert.ok(farm.y>h*.65&&farm.y<h*1.02);
   assert.ok(farm.y>place({x:165,y:245}).y);
  }
 });

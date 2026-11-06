@@ -2,6 +2,14 @@
 
 Jogo de fazenda 2D isométrico inspirado na jogabilidade social clássica, com visual modernizado. **Mobile-first em landscape**, também compatível com PC.
 
+## V0.3.4 — horta na posição de referência, validada em captura real
+- A captura de Chrome 925×390 revelou que a V0.3.3 ainda deixava a horta pequena e muito à esquerda.
+- Horta ampliada para 1,85×, com centro mundial (15,460); a área livre de 6 terrenos agora é um grupo 3×2 na parte superior esquerda, não uma faixa diagonal.
+- Os 22 com mato seguem à direita e abaixo, com o mesmo desenho e ângulo isométrico da terra e das plantações.
+- Migração 32→33 preserva plantios existentes e move apenas o cultivo de 5:3 para 7:2; mantém moedas, XP, colheitas e sede.
+- Câmera, lago, sede, curral e sistema de toque continuam independentes do posicionamento da horta.
+- Captura de navegador horizontal arquivada em cada execução de testes do GitHub Actions.
+
 ## V0.3.3 — composição visual baseada na foto-matriz do Colheita Feliz
 - **Somente a horta** foi deslocada para a parte inferior esquerda e ampliada, ficando abaixo da casinha do cachorro e próxima ao caminho.
 - Grade de 28 canteiros preservada, inclusive seis livres e 22 com mato. Não houve troca de IDs nem reset das plantas e moedas.

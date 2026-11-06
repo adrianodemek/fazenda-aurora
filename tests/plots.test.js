@@ -10,7 +10,7 @@ test('estado inicial segue a proporção histórica de terrenos',()=>{
  assert.equal(LOCKED_PLOTS.size,22);
  assert.equal(PLOT_EXPANSION_NEXT,7);
  assert.equal(LEGACY_PLOTS.size,30);
- assert.deepEqual([...FREE_PLOTS],['5:1','6:1','5:2','7:1','6:2','5:3']);
+ assert.deepEqual([...FREE_PLOTS],['5:1','5:2','6:1','6:2','7:1','7:2']);
  assert.equal(PLOT_ROWS,4);assert.equal(PLOT_COLUMNS,7);
  assert.deepEqual([...FREE_PLOTS],PLOT_VISUAL_ORDER.slice(0,6));
  for(const id of FREE_PLOTS)assert.equal(PLOTS.has(id),true);

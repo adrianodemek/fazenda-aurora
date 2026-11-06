@@ -55,6 +55,6 @@ jobs:
       - name: Disponibilizar captura para revisão visual
         uses: actions/upload-artifact@v4
         with:
-          name: fazenda-aurora-v033-mobile
+          name: fazenda-aurora-v034-mobile
           path: /tmp/aurora-mobile-preview.png
           retention-days: 7

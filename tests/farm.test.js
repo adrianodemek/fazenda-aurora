@@ -34,10 +34,30 @@ test('migração retira plantas antigas independentemente do local e preserva mo
  assert.deepEqual(s.plants,{});
  assert.deepEqual(s.unlockedPlots,[]);
  const saved=JSON.parse(values.get('fazenda-aurora-demo-v01'));
- assert.equal(saved.plotLayoutVersion,32);
+ assert.equal(saved.plotLayoutVersion,33);
  assert.deepEqual(saved.plants,{});
  const next=loadState();
  assert.equal(next.coins,378);
  assert.deepEqual(next.plants,{});
+ values.clear();
+});
+
+test('V0.3.4 preserva plantações e moedas, remapeando somente o terreno 5:3',()=>{
+ values.set('fazenda-aurora-demo-v01',JSON.stringify({
+  plotLayoutVersion:32,coins:366,xp:201,harvests:20,headquartersLevel:1,
+  selectedSeed:'carrot',unlockedPlots:[],
+  plants:{'5:3':{seed:'carrot',at:500},'5:1':{seed:'wheat',at:700},'6:2':{seed:'strawberry',at:800}}
+ }));
+ const s=loadState();
+ assert.equal(s.coins,366);
+ assert.equal(s.xp,201);
+ assert.equal(s.harvests,20);
+ assert.equal(s.selectedSeed,'carrot');
+ assert.deepEqual(Object.keys(s.plants).sort(),['5:1','6:2','7:2']);
+ assert.deepEqual(s.plants['7:2'],{seed:'carrot',at:500});
+ assert.equal(s.plants['5:3'],undefined);
+ const saved=JSON.parse(values.get('fazenda-aurora-demo-v01'));
+ assert.equal(saved.plotLayoutVersion,33);
+ assert.equal(Object.keys(saved.plants).length,3);
  values.clear();
 });
