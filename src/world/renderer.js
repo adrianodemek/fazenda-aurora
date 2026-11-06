@@ -1,5 +1,5 @@
 import {MAP_SIZE,TILE_W,TILE_H,PLOTS} from '../config/gameConfig.js?v=032';
-import {createTerrainLayer} from './art/terrain.js?v=032';
+import {createTerrainLayer} from './art/terrain.js?v=033';
 import {initialFarmView,minimumFarmZoom,maximumFarmZoom,constrainFarmCamera} from './camera.js?v=029';
 import {FARM_OBJECTS,SCENERY_TREES} from './layout.js?v=029';
 import {loadFarmSprites,drawFarmSprite} from './art/sprites.js?v=026';
@@ -7,6 +7,7 @@ import {drawCropIllustrated} from './art/crops.js?v=026';
 import {HeadquartersArt} from './art/headquarters.js?v=027';
 import {DoghouseArt} from './art/doghouse.js?v=028';
 import {AnimalPenArt} from './art/animalPen.js?v=029';
+import {PLOT_ART_SCALE,sceneTileWorld,hitFarmPlotWorld} from './plotLayout.js?v=033';
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const key=(r,c)=>r+':'+c;
 function polygon(ctx,p,fill,stroke){ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0],p[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
@@ -96,13 +97,13 @@ export class Renderer{
   this.x+=dx;this.y+=dy;
   this.manualView=true;this.constrain();
  }
- tile(r,c){return {x:(c-r)*TILE_W/2,y:(c+r)*TILE_H/2};}
+ tile(r,c){return sceneTileWorld(r,c);}
  toWorld(x,y){return {x:(x-this.x)/this.scale,y:(y-this.y)/this.scale};}
  hit(x,y){
-  const p=this.toWorld(x,y),u=p.x/(TILE_W/2),v=p.y/(TILE_H/2);
-  const c=Math.round((u+v)/2),r=Math.round((v-u)/2);
-  if(r<0||c<0||r>=MAP_SIZE||c>=MAP_SIZE)return null;
-  const q=this.tile(r,c);return Math.abs(p.x-q.x)/(TILE_W/2)+Math.abs(p.y-q.y)/(TILE_H/2)<=1.02?{r,c}:null;
+  const p=this.toWorld(x,y);
+  // Só a posição REAL do canteiro é clicável. Não resta uma horta
+  // invisível no lugar da grade anterior.
+  return hitFarmPlotWorld(p.x,p.y);
  }
  zoom(factor,x=this.width/2,y=this.height*.44){
   const before=this.toWorld(x,y);
@@ -161,9 +162,21 @@ export class Renderer{
      ctx.save();ctx.translate(q.x,q.y);ctx.scale(.82,.82);
      barn(ctx,0,0);ctx.restore();
     }
-   } else drawCropIllustrated(ctx,q.x,q.y,a.p,t);
+   } else {
+    ctx.save();
+    ctx.translate(q.x,q.y);
+    ctx.scale(PLOT_ART_SCALE,PLOT_ART_SCALE);
+    drawCropIllustrated(ctx,0,0,a.p,t);
+    ctx.restore();
+   }
   }
-  if(this.hover&&PLOTS.has(key(this.hover.r,this.hover.c))){const q=this.tile(this.hover.r,this.hover.c);ctx.strokeStyle='#fff2a4';ctx.lineWidth=3;diamond(ctx,q.x,q.y,'#fff7a322','#fff2a4');}
+  if(this.hover&&PLOTS.has(key(this.hover.r,this.hover.c))){
+   const q=this.tile(this.hover.r,this.hover.c);
+   ctx.save();ctx.translate(q.x,q.y);ctx.scale(PLOT_ART_SCALE,PLOT_ART_SCALE);
+   ctx.strokeStyle='#fff2a4';ctx.lineWidth=2;
+   diamond(ctx,0,0,'#fff7a322','#fff2a4');
+   ctx.restore();
+  }
   ctx.restore();
  }
 }

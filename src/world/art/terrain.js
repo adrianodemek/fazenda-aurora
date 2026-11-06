@@ -4,6 +4,7 @@ import {MAP_SIZE, TILE_W, TILE_H, PLOTS, FREE_PLOTS} from '../../config/gameConf
 import {drawPond} from './pond.js?v=025';
 import {FARM_OBJECTS,FARM_PATH} from '../layout.js?v=029';
 import {drawBlockedTile} from './plotTiles.js?v=032';
+import {PLOT_ART_SCALE,plotTileWorld} from '../plotLayout.js?v=033';
 
 const H_W = TILE_W / 2;
 const H_H = TILE_H / 2;
@@ -157,7 +158,8 @@ export function createTerrainLayer(blockedImage=null) {
   for(let depth=0;depth<MAP_SIZE*2-1;depth++)
    for(let r=Math.max(0,depth-MAP_SIZE+1);r<=Math.min(depth,MAP_SIZE-1);r++){
     const c=depth-r,p=tileAt(r,c);
-    if(!PLOTS.has(r+':'+c))meadow(ctx,p.x,p.y,r,c);
+    // Grama cobre todo o piso: evita uma horta fantasma no antigo local.
+    meadow(ctx,p.x,p.y,r,c);
    }
 
   drawSoftPath(ctx);
@@ -169,9 +171,12 @@ export function createTerrainLayer(blockedImage=null) {
     const c=depth-r;
     const id=r+':'+c;
     if(PLOTS.has(id)){
-     const p=tileAt(r,c);
-     if(FREE_PLOTS.has(id))plot(ctx,p.x,p.y,r,c);
-     else drawBlockedTile(ctx,p.x,p.y,blockedImage);
+     const p=plotTileWorld(r,c);
+     // Mesmo transform 2D para todos: não separa terra, mato e plantio.
+     ctx.save();ctx.translate(p.x,p.y);ctx.scale(PLOT_ART_SCALE,PLOT_ART_SCALE);
+     if(FREE_PLOTS.has(id))plot(ctx,0,0,r,c);
+     else drawBlockedTile(ctx,0,0,blockedImage);
+     ctx.restore();
     }
    }
 

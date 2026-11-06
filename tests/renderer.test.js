@@ -29,6 +29,10 @@ test('cenário usa terreno em cache e preserva as coordenadas dos canteiros',()=
   assert.ok(calls.fill>MAP_SIZE*MAP_SIZE,'terreno isométrico deve desenhar');
   const tile=renderer.tile(5,2);
   assert.deepEqual(renderer.hit(renderer.x+tile.x*renderer.scale,renderer.y+tile.y*renderer.scale),{r:5,c:2});
+  const previous={(c=2,r=5)=>({x:(c-r)*TILE_W/2,y:(c+r)*TILE_H/2})};
+  const old=previous();
+  assert.equal(renderer.hit(renderer.x+old.x*renderer.scale,renderer.y+old.y*renderer.scale),null,
+   'antiga posição da horta não deve aceitar plantio');
   renderer.render(100);
   renderer.render(200);
   assert.equal(calls.drawImage,2,'camada cacheada desenhada uma vez por frame');
