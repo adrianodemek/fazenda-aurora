@@ -2,6 +2,14 @@
 
 Jogo de fazenda 2D isométrico inspirado na jogabilidade social clássica, com visual modernizado. **Mobile-first em landscape**, também compatível com PC.
 
+## V0.3.0 — canteiros com mato e progressão inicial nostálgica
+- 28 terrenos de horta conforme relatos históricos do Colheita Feliz: 6 livres e 22 bloqueados por grama alta.
+- Sprite de grama inteiriça, sem sombra externa, em `public/assets/plots/grass-blocked-01.webp`.
+- Compra e desbloqueio ainda não implementados; canteiros bloqueados não recebem sementes nem cobram moedas.
+- Terrenos já plantados em versões antigas continuam colhíveis, inclusive nos dois endereços removidos do novo conjunto de 28; depois da colheita ficam indisponíveis.
+- Mesmo identificador de salvamento, preservando XP, moedas, sede e culturas existentes.
+- Estrutura prevista para futura expansão de 7 terrenos, sem ativar compras nesta etapa.
+
 ## V0.2.9 — visual clássico com cercado no canto direito
 - Enquadramento mais próximo no celular horizontal, com limite mínimo de zoom ajustado.
 - Sede inicial posicionada na parte superior central, com sprite de nível independente.

@@ -6,7 +6,7 @@ import {FARM_OBJECTS,FARM_VIEW_REFERENCE,WORLD_BOUNDS,SCENERY_TREES}
  from '../src/world/layout.js';
 import {DoghouseArt} from '../src/world/art/doghouse.js';
 import {readFileSync} from 'node:fs';
-import {PLOTS,SAVE_KEY} from '../src/config/gameConfig.js';
+import {PLOTS,FREE_PLOTS,LOCKED_PLOTS,LEGACY_PLOTS,SAVE_KEY} from '../src/config/gameConfig.js';
 
 function project(view,p){return {
  x:view.x+p.x*view.scale,
@@ -77,7 +77,9 @@ test('casa do cachorro é um sprite separado da sede',()=>{
 });
 
 test('nenhum canteiro ou progresso do jogo foi movido',()=>{
- assert.equal(PLOTS.size,30);
- assert.ok(PLOTS.has('5:2') && PLOTS.has('9:7'));
+ assert.equal(PLOTS.size,28);
+ assert.equal(FREE_PLOTS.size,6);assert.equal(LOCKED_PLOTS.size,22);
+ assert.equal(LEGACY_PLOTS.size,30);
+ assert.ok(PLOTS.has('5:3') && PLOTS.has('9:7'));
  assert.equal(SAVE_KEY,'fazenda-aurora-demo-v01');
 });

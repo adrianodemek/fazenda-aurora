@@ -1,6 +1,6 @@
 import {CROPS} from './config/gameConfig.js';
-import {loadState,saveState,interact,levelOf} from './systems/farm.js?v=027';
-import {Renderer} from './world/renderer.js?v=029';
+import {loadState,saveState,interact,levelOf} from './systems/farm.js?v=030';
+import {Renderer} from './world/renderer.js?v=030';
 import {minimumFarmZoom,maximumFarmZoom} from './world/camera.js?v=029';
 import {PointerControls} from './input/pointer.js?v=028';
 import {setupFullscreen} from './ui/fullscreen.js';
@@ -17,7 +17,7 @@ function update(){
  $('coins').textContent=state.coins.toLocaleString('pt-BR');
  $('level').textContent=levelOf(state.xp).level;
  const count=Object.keys(state.plants).length;
- $('status').textContent=count?count+' canteiros em cultivo':'Toque num canteiro para plantar';
+ $('status').textContent=count?count+' em cultivo · 6 livres / 22 bloqueados':'6 livres · 22 com mato';
  for(const button of seeds.querySelectorAll('button')){const active=button.dataset.seed===state.selectedSeed;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));}
 }
 function notify(message){const el=$('message');el.textContent=message;el.classList.add('visible');clearTimeout(timer);timer=setTimeout(()=>el.classList.remove('visible'),2200);}
