@@ -29,7 +29,11 @@ test('sprite de grama recortado encaixa no footprint 100x50',()=>{
  assert.equal(BLOCKED_TILE_DEST.width,TILE_W);
  assert.ok(BLOCKED_TILE_DEST.height>=TILE_H && BLOCKED_TILE_DEST.height<=TILE_H+4);
  const image={complete:true,naturalWidth:224},calls=[];
- assert.equal(drawBlockedTile({drawImage:(...args)=>calls.push(args)},-100,200,image),true);
+ const ctx={
+  beginPath(){},moveTo(){},lineTo(){},closePath(){},fill(){},
+  drawImage:(...args)=>calls.push(args)
+ };
+ assert.equal(drawBlockedTile(ctx,-100,200,image),true);
  assert.deepEqual(calls[0],[image,0,0,224,120,-150,173,100,54]);
 });
 test('seis primeiros livres fazem um grupo compacto na parte mais alta',()=>{

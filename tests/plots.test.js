@@ -22,6 +22,10 @@ test('sprite aprovado está em arquivo próprio WebP transparente',()=>{
  const buf=readFileSync(file);
  assert.equal(buf.toString('ascii',0,4),'RIFF');
  assert.equal(buf.toString('ascii',8,12),'WEBP');
+ assert.equal(buf.toString('ascii',12,16),'VP8X');
+ assert.ok((buf[20]&16)!==0,'sprite precisa ter transparência alfa');
+ assert.equal(buf.readUIntLE(24,3)+1,224,'largura esperada');
+ assert.equal(buf.readUIntLE(27,3)+1,120,'altura esperada');
  assert.ok(statSync(file).size>2000);
 });
 test('somente terrenos livres aceitam plantio; futuro desbloqueio é extensível',()=>{
