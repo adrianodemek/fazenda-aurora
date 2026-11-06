@@ -39,6 +39,6 @@ test('pintura do curral usa camadas e posicionamento do mapa',()=>{
  }finally{globalThis.Image=prev;}
 });
 test('curral é decorativo e não altera o progresso agrícola',()=>{
- assert.equal(PLOTS.size,30);
+ assert.equal(PLOTS.size,28);
  assert.equal(SAVE_KEY,'fazenda-aurora-demo-v01');
 });

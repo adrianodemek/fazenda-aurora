@@ -36,7 +36,8 @@ const run=()=>{
    // são verificados por testes locais sem estourar o relógio virtual.
    for(const asset of [
     '../public/assets/buildings/doghouse/level-01.svg',
-    '../public/assets/buildings/headquarters/level-01.webp'
+    '../public/assets/buildings/headquarters/level-01.webp',
+    '../public/assets/plots/grass-blocked-01.webp'
    ]){
     const response=await fetch(asset,{cache:'no-store'});
     if(!response.ok)throw Error('sprite não carregou: '+asset);
