@@ -38,3 +38,23 @@ jobs:
           fi
           echo 'Chrome confirmou: cenário, sprites e zoom funcionando.'
 
+
+      - name: Capturar imagem do layout no Chromium horizontal
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          python3 -m http.server 8000 --bind 127.0.0.1 > /tmp/aurora-preview-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          sleep 2
+          timeout 30 "$CHROME" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --hide-scrollbars \
+            --window-size=925,390 --virtual-time-budget=5000 \
+            --screenshot=/tmp/aurora-mobile-preview.png http://127.0.0.1:8000/index.html >/tmp/aurora-shot.log 2>&1
+          test -s /tmp/aurora-mobile-preview.png
+      - name: Disponibilizar captura para revisão visual
+        uses: actions/upload-artifact@v4
+        with:
+          name: fazenda-aurora-v033-mobile
+          path: /tmp/aurora-mobile-preview.png
+          retention-days: 7
