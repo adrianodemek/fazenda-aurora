@@ -3,6 +3,7 @@
 import {MAP_SIZE, TILE_W, TILE_H, PLOTS, FREE_PLOTS} from '../../config/gameConfig.js';
 import {drawPond} from './pond.js?v=025';
 import {FARM_OBJECTS,FARM_PATH} from '../layout.js?v=029';
+import {drawBlockedTile} from './plotTiles.js?v=032';
 
 const H_W = TILE_W / 2;
 const H_H = TILE_H / 2;
@@ -76,29 +77,24 @@ function meadow(ctx,x,y,r,c) {
   }
   ctx.restore();
 }
-function plot(ctx,x,y,r,c) {
-  // Canteiro levantado, com profundidade e três sulcos paralelos.
-  oval(ctx,x+2,y+5,44,17,'#46653832');
-  const left=[x-48,y-3], bottom=[x,y+21], right=[x+48,y-3];
-  poly(ctx,[left,bottom,[x,y+27],[x-48,y+3]],'#855738');
-  poly(ctx,[bottom,right,[x+48,y+3],[x,y+27]],'#95603c');
-  poly(ctx,diamond(x,y-3,48,24),SOIL[(r+c)%SOIL.length],'#996844');
-
-  // O sulco fica dentro do canteiro e é estável em cada posição.
-  ctx.save();
-  path(ctx,diamond(x,y-3,46,22));
-  ctx.clip();
-  for(let i=-2;i<=2;i++){
-    const dx=i*12;
-    line(ctx,x-24+dx,y+4,x+10+dx,y-14,'#885a3b',2.3);
-    line(ctx,x-23+dx,y+5,x+11+dx,y-13,'#d69b66',.8);
-  }
-  for(let i=0;i<7;i++){
-    const px=x+(randomish(r,c,i+70)-.5)*62;
-    const py=y-3+(randomish(r,c,i+80)-.5)*16;
-    oval(ctx,px,py,1.3,.8,'#d8a46d');
-  }
-  ctx.restore();
+function plot(ctx,x,y,r,c){
+ // Terra livre e mato bloqueado ocupam EXATAMENTE o mesmo losango.
+ const left=[x-H_W,y],bottom=[x,y+H_H],right=[x+H_W,y];
+ poly(ctx,[left,bottom,[x,y+H_H+3],[x-H_W,y+3]],'#875737');
+ poly(ctx,[bottom,right,[x+H_W,y+3],[x,y+H_H+3]],'#98633d');
+ poly(ctx,diamond(x,y,H_W,H_H),SOIL[(r+c)%SOIL.length],'#8d5c3c');
+ ctx.save();path(ctx,diamond(x,y,H_W-1,H_H-1));ctx.clip();
+ for(let i=-3;i<=3;i++){
+  const dx=i*13;
+  line(ctx,x-25+dx,y+7,x+17+dx,y-14,'#885735',2);
+  line(ctx,x-24+dx,y+6,x+18+dx,y-13,'#d5a270',.75);
+ }
+ for(let i=0;i<7;i++){
+  const px=x+(randomish(r,c,i+70)-.5)*62;
+  const py=y+(randomish(r,c,i+80)-.5)*15;
+  oval(ctx,px,py,1.2,.7,'#d7a977');
+ }
+ ctx.restore();
 }
 function pathway(ctx,x,y){
   poly(ctx,diamond(x,y,49,24),'#d8c692','#b2b87d');
@@ -130,18 +126,6 @@ function drawSoftPath(ctx){
  ctx.strokeStyle='#d4b987';ctx.lineWidth=55;ctx.stroke();
  ctx.strokeStyle='#dfc99c';ctx.lineWidth=35;ctx.stroke();
  ctx.restore();
-}
-
-// A grama pertence à camada do chão. Nunca deve ser desenhada por cima
-// de um canteiro de terra ou de uma planta.
-function blockedPlot(ctx,x,y,image){
- if(image?.complete && image.naturalWidth>0){
-  // Sprite enquadrado em um único tile (100×50), com relevo discreto.
-  // Não deve alcançar o tile acima ou abaixo.
-  ctx.drawImage(image,x-TILE_W/2,y-TILE_H/2-5,TILE_W,TILE_H+5);
- }else{
-  poly(ctx,diamond(x,y,48,24),'#91c84e','#78aa41');
- }
 }
 
 export function createTerrainLayer(blockedImage=null) {
@@ -187,7 +171,7 @@ export function createTerrainLayer(blockedImage=null) {
     if(PLOTS.has(id)){
      const p=tileAt(r,c);
      if(FREE_PLOTS.has(id))plot(ctx,p.x,p.y,r,c);
-     else blockedPlot(ctx,p.x,p.y,blockedImage);
+     else drawBlockedTile(ctx,p.x,p.y,blockedImage);
     }
    }
 

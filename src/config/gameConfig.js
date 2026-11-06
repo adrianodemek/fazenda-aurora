@@ -9,10 +9,17 @@ export const CROPS=Object.freeze({
 // Versão original do Colheita Feliz (registro de 2011): 6 terrenos
 // iniciais e expansão até 28. Mais sete podem ser adicionados no futuro.
 export const LEGACY_PLOTS=new Set(Array.from({length:5},(_,r)=>Array.from({length:6},(_,c)=>(r+5)+':'+(c+2))).flat());
-export const PLOTS=new Set([...LEGACY_PLOTS].filter(key=>key!=='9:2'&&key!=='9:7'));
-// Os seis primeiros canteiros, formando a fileira superior inteira.
-export const FREE_PLOTS=new Set(Array.from({length:6},(_,c)=>'5:'+(c+2)));
+// Horta isométrica 4×7: todos os 28 losangos dividem suas arestas.
+export const PLOT_ROWS=4, PLOT_COLUMNS=7;
+export const PLOTS=new Set(Array.from({length:PLOT_ROWS},(_,r)=>
+ Array.from({length:PLOT_COLUMNS},(_,c)=>(5+r)+':'+(1+c))).flat());
+// Ordem VISUAL, do alto para baixo; não uma faixa isolada de seis.
+export const PLOT_VISUAL_ORDER=Object.freeze([...PLOTS].sort((a,b)=>{
+ const [ar,ac]=a.split(':').map(Number),[br,bc]=b.split(':').map(Number);
+ return (ar+ac)-(br+bc) || (ac-ar)-(bc-br);
+}));
+export const FREE_PLOTS=new Set(PLOT_VISUAL_ORDER.slice(0,6));
 export const LOCKED_PLOTS=new Set([...PLOTS].filter(key=>!FREE_PLOTS.has(key)));
 export const PLOT_EXPANSION_NEXT=7;
-export const PLOT_LAYOUT_VERSION=31;
+export const PLOT_LAYOUT_VERSION=32;
 export const TREES=[[1,2],[2,3],[3,1],[2,11],[5,12],[9,1],[11,2],[12,4],[12,11],[10,12]];
