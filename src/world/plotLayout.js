@@ -6,9 +6,9 @@ import {PLOTS,TILE_W,TILE_H} from '../config/gameConfig.js?v=032';
 
 // A grade 4x7 é escalada em torno de seu centro, sem alterar a projeção 2:1.
 // Original: centro (-125,287.5). Novo: ao sul do cenário, como a referência.
-export const PLOT_ART_SCALE=1.45;
+export const PLOT_ART_SCALE=1.85;
 export const PLOT_GRID_CENTER=Object.freeze({x:-125,y:287.5});
-export const PLOT_WORLD_CENTER=Object.freeze({x:-125,y:415});
+export const PLOT_WORLD_CENTER=Object.freeze({x:15,y:460});
 
 export function baseTileWorld(r,c){
  return {x:(c-r)*TILE_W/2,y:(c+r)*TILE_H/2};

@@ -13,13 +13,17 @@ export const LEGACY_PLOTS=new Set(Array.from({length:5},(_,r)=>Array.from({lengt
 export const PLOT_ROWS=4, PLOT_COLUMNS=7;
 export const PLOTS=new Set(Array.from({length:PLOT_ROWS},(_,r)=>
  Array.from({length:PLOT_COLUMNS},(_,c)=>(5+r)+':'+(1+c))).flat());
-// Ordem VISUAL, do alto para baixo; não uma faixa isolada de seis.
-export const PLOT_VISUAL_ORDER=Object.freeze([...PLOTS].sort((a,b)=>{
+// Os seis primeiros formam um grupo de 3x2 à esquerda da horta,
+// como a área plantada na imagem-matriz do Colheita Feliz.
+export const INITIAL_FREE_PLOTS=Object.freeze(['5:1','5:2','6:1','6:2','7:1','7:2']);
+const remaining=[...PLOTS].filter(id=>!INITIAL_FREE_PLOTS.includes(id));
+remaining.sort((a,b)=>{
  const [ar,ac]=a.split(':').map(Number),[br,bc]=b.split(':').map(Number);
  return (ar+ac)-(br+bc) || (ac-ar)-(bc-br);
-}));
-export const FREE_PLOTS=new Set(PLOT_VISUAL_ORDER.slice(0,6));
+});
+export const PLOT_VISUAL_ORDER=Object.freeze([...INITIAL_FREE_PLOTS,...remaining]);
+export const FREE_PLOTS=new Set(INITIAL_FREE_PLOTS);
 export const LOCKED_PLOTS=new Set([...PLOTS].filter(key=>!FREE_PLOTS.has(key)));
 export const PLOT_EXPANSION_NEXT=7;
-export const PLOT_LAYOUT_VERSION=32;
+export const PLOT_LAYOUT_VERSION=33;
 export const TREES=[[1,2],[2,3],[3,1],[2,11],[5,12],[9,1],[11,2],[12,4],[12,11],[10,12]];

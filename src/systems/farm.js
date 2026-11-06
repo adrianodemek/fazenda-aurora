@@ -14,13 +14,18 @@ export function loadState(){
   // A nova horta começa sem plantações nem desbloqueios antigos.
   // Moedas, experiência, colheitas e sede permanecem.
   const migrated=raw.plotLayoutVersion!==PLOT_LAYOUT_VERSION;
-  if(!migrated && Array.isArray(raw.unlockedPlots))
+  const fromPreviousLayout=raw.plotLayoutVersion===32;
+  if((!migrated||fromPreviousLayout) && Array.isArray(raw.unlockedPlots))
    initial.unlockedPlots=[...new Set(raw.unlockedPlots.filter(key=>typeof key==='string'&&PLOTS.has(key)&&!FREE_PLOTS.has(key)))];
   if(CROPS[raw.selectedSeed])initial.selectedSeed=raw.selectedSeed;
-  if(!migrated && raw.plants && typeof raw.plants==='object')
-   for(const [key,p] of Object.entries(raw.plants))
-    if(PLOTS.has(key)&&isPlotUnlocked(initial,key)&&p&&CROPS[p.seed]&&Number.isFinite(p.at))
-     initial.plants[key]={seed:p.seed,at:p.at};
+  // Da V0.3.3 para a V0.3.4: preserva as plantas do jogador.
+  // O único lote livre que mudou de endereço é 5:3 -> 7:2.
+  if((!migrated||fromPreviousLayout) && raw.plants && typeof raw.plants==='object')
+   for(const [key,p] of Object.entries(raw.plants)){
+    const dest=fromPreviousLayout && key==='5:3'?'7:2':key;
+    if(PLOTS.has(dest)&&isPlotUnlocked(initial,dest)&&p&&CROPS[p.seed]&&Number.isFinite(p.at))
+     initial.plants[dest]={seed:p.seed,at:p.at};
+   }
   if(migrated)saveState(initial);
  } catch { /* navegador pode bloquear armazenamento */ }
  return initial;

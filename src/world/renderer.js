@@ -1,5 +1,5 @@
-import {MAP_SIZE,TILE_W,TILE_H,PLOTS} from '../config/gameConfig.js?v=032';
-import {createTerrainLayer} from './art/terrain.js?v=033';
+import {MAP_SIZE,TILE_W,TILE_H,PLOTS} from '../config/gameConfig.js?v=034';
+import {createTerrainLayer} from './art/terrain.js?v=034';
 import {initialFarmView,minimumFarmZoom,maximumFarmZoom,constrainFarmCamera} from './camera.js?v=029';
 import {FARM_OBJECTS,SCENERY_TREES} from './layout.js?v=029';
 import {loadFarmSprites,drawFarmSprite} from './art/sprites.js?v=026';
@@ -7,7 +7,7 @@ import {drawCropIllustrated} from './art/crops.js?v=026';
 import {HeadquartersArt} from './art/headquarters.js?v=027';
 import {DoghouseArt} from './art/doghouse.js?v=028';
 import {AnimalPenArt} from './art/animalPen.js?v=029';
-import {PLOT_ART_SCALE,sceneTileWorld,hitFarmPlotWorld} from './plotLayout.js?v=033';
+import {PLOT_ART_SCALE,sceneTileWorld,hitFarmPlotWorld} from './plotLayout.js?v=034';
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const key=(r,c)=>r+':'+c;
 function polygon(ctx,p,fill,stroke){ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0],p[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}

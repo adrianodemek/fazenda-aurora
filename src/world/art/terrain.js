@@ -1,10 +1,10 @@
 // Terreno estático da fazenda. A camada é desenhada uma vez e reutilizada
 // pela câmera: evita redesenhar cada losango em todos os frames no celular.
-import {MAP_SIZE, TILE_W, TILE_H, PLOTS, FREE_PLOTS} from '../../config/gameConfig.js?v=032';
+import {MAP_SIZE, TILE_W, TILE_H, PLOTS, FREE_PLOTS} from '../../config/gameConfig.js?v=034';
 import {drawPond} from './pond.js?v=025';
 import {FARM_OBJECTS,FARM_PATH} from '../layout.js?v=029';
 import {drawBlockedTile} from './plotTiles.js?v=032';
-import {PLOT_ART_SCALE,plotTileWorld} from '../plotLayout.js?v=033';
+import {PLOT_ART_SCALE,plotTileWorld} from '../plotLayout.js?v=034';
 
 const H_W = TILE_W / 2;
 const H_H = TILE_H / 2;
