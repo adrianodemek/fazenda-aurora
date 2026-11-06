@@ -1,6 +1,6 @@
 import {CROPS} from './config/gameConfig.js?v=034';
 import {loadState,saveState,interact,levelOf} from './systems/farm.js?v=034';
-import {Renderer} from './world/renderer.js?v=034';
+import {Renderer} from './world/renderer.js?v=035';
 import {minimumFarmZoom,maximumFarmZoom} from './world/camera.js?v=029';
 import {PointerControls} from './input/pointer.js?v=028';
 import {setupFullscreen} from './ui/fullscreen.js';

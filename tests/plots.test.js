@@ -18,7 +18,7 @@ test('estado inicial segue a proporção histórica de terrenos',()=>{
  for(const id of FREE_PLOTS)assert.equal(LOCKED_PLOTS.has(id),false);
 });
 test('sprite aprovado está em arquivo próprio WebP transparente',()=>{
- const file=new URL('../public/assets/plots/grass-blocked-01.webp',import.meta.url);
+ const file=new URL('../public/assets/plots/grass-blocked-02.webp',import.meta.url);
  const buf=readFileSync(file);
  assert.equal(buf.toString('ascii',0,4),'RIFF');
  assert.equal(buf.toString('ascii',8,12),'WEBP');
@@ -41,5 +41,5 @@ test('canteiros bloqueados substituem terra, não são sobrepostos',()=>{
  assert.match(terrain,/else drawBlockedTile\(/);
  assert.doesNotMatch(renderer,/type:'blocked'/);
  assert.match(renderer,/this\.terrain=createTerrainLayer\(image\)/);
- assert.match(renderer,/grass-blocked-01\.webp\?v=032/);
+ assert.match(renderer,/grass-blocked-02\.webp\?v=035/);
 });

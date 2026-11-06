@@ -2,6 +2,14 @@
 
 Jogo de fazenda 2D isométrico inspirado na jogabilidade social clássica, com visual modernizado. **Mobile-first em landscape**, também compatível com PC.
 
+## V0.3.5 — novo sprite de grama inteiriça aprovado
+- Novo recurso visual próprio: `public/assets/plots/grass-blocked-02.webp` (224×120, RGBA com transparência, ~7 KB).
+- Um bloco único de grama, **sem linhas, divisões internas ou sombra lateral avulsa**. O sprite anterior permanece no repositório para comparação.
+- Aparece apenas nos 22 canteiros bloqueados; os seis livres, seu plantio e a colheita são preservados.
+- Desenho alinhado ao losango de 100×50 do terreno, com base verde para evitar frestas entre os blocos.
+- Ilustração separada da posição da horta, hitbox, zoom, salvamento e mecânicas.
+- Cache de arquivos atualizado e testes visuais automatizados.
+
 ## V0.3.4 — horta na posição de referência, validada em captura real
 - A captura de Chrome 925×390 revelou que a V0.3.3 ainda deixava a horta pequena e muito à esquerda.
 - Horta ampliada para 1,85×, com centro mundial (15,460); a área livre de 6 terrenos agora é um grupo 3×2 na parte superior esquerda, não uma faixa diagonal.

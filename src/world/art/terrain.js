@@ -3,7 +3,7 @@
 import {MAP_SIZE, TILE_W, TILE_H, PLOTS, FREE_PLOTS} from '../../config/gameConfig.js?v=034';
 import {drawPond} from './pond.js?v=025';
 import {FARM_OBJECTS,FARM_PATH} from '../layout.js?v=029';
-import {drawBlockedTile} from './plotTiles.js?v=032';
+import {drawBlockedTile} from './plotTiles.js?v=035';
 import {PLOT_ART_SCALE,plotTileWorld} from '../plotLayout.js?v=034';
 
 const H_W = TILE_W / 2;

@@ -25,12 +25,12 @@ test('as arestas dos vizinhos coincidem sem vãos',()=>{
  }
 });
 test('sprite de grama recortado encaixa no footprint 100x50',()=>{
- assert.deepEqual(BLOCKED_SPRITE_CROP,{sx:0,sy:30,sw:140,sh:110});
+ assert.deepEqual(BLOCKED_SPRITE_CROP,{sx:0,sy:0,sw:224,sh:120});
  assert.equal(BLOCKED_TILE_DEST.width,TILE_W);
  assert.ok(BLOCKED_TILE_DEST.height>=TILE_H && BLOCKED_TILE_DEST.height<=TILE_H+4);
- const image={complete:true,naturalWidth:140},calls=[];
+ const image={complete:true,naturalWidth:224},calls=[];
  assert.equal(drawBlockedTile({drawImage:(...args)=>calls.push(args)},-100,200,image),true);
- assert.deepEqual(calls[0],[image,0,30,140,110,-150,173,100,54]);
+ assert.deepEqual(calls[0],[image,0,0,224,120,-150,173,100,54]);
 });
 test('seis primeiros livres fazem um grupo compacto na parte mais alta',()=>{
  assert.equal(FREE_PLOTS.size,6);

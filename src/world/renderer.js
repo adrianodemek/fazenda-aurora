@@ -1,5 +1,5 @@
 import {MAP_SIZE,TILE_W,TILE_H,PLOTS} from '../config/gameConfig.js?v=034';
-import {createTerrainLayer} from './art/terrain.js?v=034';
+import {createTerrainLayer} from './art/terrain.js?v=035';
 import {initialFarmView,minimumFarmZoom,maximumFarmZoom,constrainFarmCamera} from './camera.js?v=029';
 import {FARM_OBJECTS,SCENERY_TREES} from './layout.js?v=029';
 import {loadFarmSprites,drawFarmSprite} from './art/sprites.js?v=026';
@@ -53,7 +53,7 @@ export class Renderer{
    const image=new Image();
    image.decoding='async';
    image.onload=()=>{this.terrain=createTerrainLayer(image);};
-   image.src=new URL('../../public/assets/plots/grass-blocked-01.webp?v=032',import.meta.url).href;
+   image.src=new URL('../../public/assets/plots/grass-blocked-02.webp?v=035',import.meta.url).href;
    this.blockedSprite=image;
    if(image.complete&&image.naturalWidth>0)this.terrain=createTerrainLayer(image);
   }
