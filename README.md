@@ -2,6 +2,14 @@
 
 Jogo de fazenda 2D isométrico inspirado na jogabilidade social clássica, com visual modernizado. **Mobile-first em landscape**, também compatível com PC.
 
+## V0.3.2 — horta com encaixe isométrico contínuo
+- Reconstruímos a horta como **4 × 7 = 28** losangos, sem lacunas ou sobreposições.
+- O sprite aprovado de mato é recortado para remover a margem transparente (fonte 140×140, recorte y=30–140), e então encaixado precisamente em 100×54 unidades do mundo.
+- Terra arada usa o mesmo ângulo, largura e perímetro; lado de relevo de 3 unidades sem sombra lateral solta.
+- Seis primeiros canteiros pela posição visual (do alto para baixo), agrupados e não mais em uma faixa diagonal comprida.
+- Migração `plotLayoutVersion=32`: remove culturas da distribuição anterior uma única vez e preserva moedas, XP, colheitas e sede.
+- Geometria própria em `src/world/art/plotTiles.js`, pronta para evoluir junto com os sprites.
+
 ## V0.3.1 — grama no lugar da terra, nunca por cima
 - A grade da horta continua com 28 espaços: seis livres na PRIMEIRA fileira (5:2 a 5:7), 22 bloqueados nas demais.
 - Cada sprite bloqueado cabe no próprio losango (100×55 unidades), sem encobrir as parcelas vizinhas.

@@ -6,7 +6,7 @@
 <script type="module">
 import {initialFarmView,minimumFarmZoom} from '../src/world/camera.js';
 import {FARM_OBJECTS} from '../src/world/layout.js';
-import {FREE_PLOTS,LOCKED_PLOTS} from '../src/config/gameConfig.js';
+import {FREE_PLOTS,LOCKED_PLOTS,PLOT_VISUAL_ORDER} from '../src/config/gameConfig.js';
 const frame=document.getElementById('farm');
 const result=document.getElementById('result');
 let completed=false;
@@ -45,8 +45,8 @@ const run=()=>{
    }
    if(FREE_PLOTS.size!==6||LOCKED_PLOTS.size!==22)
     throw Error('número de parcelas incorreto');
-   if(![...FREE_PLOTS].every(k=>k.startsWith('5:')))
-    throw Error('primeira fileira não está liberada');
+   if(JSON.stringify([...FREE_PLOTS])!==JSON.stringify(PLOT_VISUAL_ORDER.slice(0,6)))
+    throw Error('seis terrenos iniciais não são os primeiros da horta');
    if(!minus.disabled)throw Error('afastamento inicial está liberado');
    plus.click();
    if(minus.disabled)throw Error('zoom + não ativou o -');

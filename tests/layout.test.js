@@ -80,6 +80,6 @@ test('nenhum canteiro ou progresso do jogo foi movido',()=>{
  assert.equal(PLOTS.size,28);
  assert.equal(FREE_PLOTS.size,6);assert.equal(LOCKED_PLOTS.size,22);
  assert.equal(LEGACY_PLOTS.size,30);
- assert.ok(PLOTS.has('5:2') && PLOTS.has('9:6'));
+ assert.ok(PLOTS.has('5:1') && PLOTS.has('8:7'));
  assert.equal(SAVE_KEY,'fazenda-aurora-demo-v01');
 });
